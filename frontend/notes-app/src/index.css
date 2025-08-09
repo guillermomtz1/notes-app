@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300&family=Nata+Sans:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@theme {
+  --color-primary: #3ecf8e;
+  --color-primary-dark: #24b47e;
+  --color-primary-light: #4ade80;
+  --color-secondary: #8b5cf6;
+  --color-accent: #f59e0b;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f97316;
+  --color-background: #0c0c0c;
+  --color-surface: #1a1a1a;
+  --color-surface-light: #2a2a2a;
+  --color-text: #ffffff;
+  --color-text-light: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-border: #27272a;
+  --color-border-light: #3f3f46;
+  --color-gradient-start: #3ecf8e;
+  --color-gradient-end: #8b5cf6;
+  --color-hero-bg: #0c0c0c;
+  --color-card-bg: #1a1a1a;
+}
+
+@layer base {
+  html {
+    font-family: "Poppins", sans-serif;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .input-box {
+    @apply w-full text-sm bg-surface border border-border px-5 py-3 rounded mb-4 outline-none text-text;
+  }
+
+  .btn-primary {
+    @apply w-full text-sm bg-primary text-black p-2 rounded my-1 hover:bg-primary-dark transition-colors duration-200 font-medium;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-transparent text-primary border-2 border-primary rounded-lg hover:bg-primary hover:text-black transition-all duration-200 font-medium;
+  }
+
+  .card {
+    @apply bg-surface rounded-xl shadow-lg border border-border p-6;
+  }
+
+  .gradient-bg {
+    background: linear-gradient(
+      135deg,
+      var(--color-gradient-start) 0%,
+      var(--color-gradient-end) 100%
+    );
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0c0c0c 100%);
+  }
+
+  .supabase-gradient {
+    background: linear-gradient(135deg, #3ecf8e 0%, #8b5cf6 100%);
+  }
+}
