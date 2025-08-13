@@ -43,7 +43,7 @@
   }
 
   .btn-primary {
-    @apply w-full text-sm bg-primary text-black p-2 rounded my-1 hover:bg-primary-dark transition-colors duration-200 font-medium;
+    @apply w-full text-sm bg-primary text-black p-2 rounded my-1 hover:bg-primary-dark transition-colors duration-200 font-medium cursor-pointer;
   }
 
   .btn-secondary {
@@ -68,5 +68,13 @@
 
   .supabase-gradient {
     background: linear-gradient(135deg, #3ecf8e 0%, #8b5cf6 100%);
+  }
+
+  .icon-btn {
+    @apply text-xl text-slate-300 cursor-pointer hover:text-primary;
+  }
+
+  .input-label {
+    @apply text-xs text-slate-400;
   }
 }
