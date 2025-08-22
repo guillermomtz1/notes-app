@@ -44,7 +44,7 @@ const WeeklyProgressBar = ({ activityData = [] }) => {
       </div>
 
       <div className="grid grid-cols-13 gap-1 mb-2">
-        {weeks.map((week, index) => (
+        {weeks.map((week) => (
           <div
             key={week.weekNumber}
             className={`

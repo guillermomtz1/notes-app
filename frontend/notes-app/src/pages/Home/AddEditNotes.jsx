@@ -1,10 +1,13 @@
 import React, { useState, useRef } from "react";
 import TagInput from "../../components/Input/TagInput";
-import { MdClose, MdFormatListBulleted } from "react-icons/md";
+import { MdClose, MdFormatListBulleted, MdCalendarToday } from "react-icons/md";
 
-const AddEditNotes = ({ noteData, type, onClose }) => {
+const AddEditNotes = ({ type, onClose }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toLocaleDateString("en-CA")
+  );
   const [tags, setTags] = useState([]);
   const [error, setError] = useState(null);
 
@@ -23,6 +26,10 @@ const AddEditNotes = ({ noteData, type, onClose }) => {
     }
     if (!content) {
       setError("Please enter the content");
+      return;
+    }
+    if (!selectedDate) {
+      setError("Please select a date");
       return;
     }
 
@@ -103,10 +110,24 @@ const AddEditNotes = ({ noteData, type, onClose }) => {
         <input
           type="text"
           className="text-2xl text-text bg-surface border border-border rounded-lg px-3 py-2 outline-none focus:border-primary transition-colors"
-          placeholder="Week of ..."
+          placeholder="Title"
           value={title}
           onChange={({ target }) => setTitle(target.value)}
         />
+      </div>
+
+      <div className="flex flex-col gap-2 mt-4">
+        <label className="text-sm font-medium text-text-light uppercase tracking-wide">
+          DATE
+        </label>
+        <div className="relative">
+          <input
+            type="date"
+            className="w-full text-text bg-surface border border-border rounded-lg px-3 py-2 outline-none focus:border-primary transition-colors [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:brightness-0 [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:hover:opacity-100 [&::-webkit-calendar-picker-indicator]:transition-opacity"
+            value={selectedDate}
+            onChange={({ target }) => setSelectedDate(target.value)}
+          />
+        </div>
       </div>
 
       <div className="flex flex-col gap-2 mt-4">
