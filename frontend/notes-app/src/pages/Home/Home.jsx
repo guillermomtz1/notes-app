@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "@clerk/clerk-react";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
 import { MdAdd, MdClose, MdDelete } from "react-icons/md";
@@ -8,6 +9,7 @@ import WeeklyProgressBar from "../../components/WeeklyProgressBar/WeeklyProgress
 import { API_ENDPOINTS, apiRequest } from "../../utils/api";
 
 const Home = () => {
+  const { getToken } = useAuth();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,7 +31,12 @@ const Home = () => {
   // Fetch notes from API
   const fetchNotes = async () => {
     try {
-      const data = await apiRequest(API_ENDPOINTS.NOTES);
+      const token = await getToken();
+      const data = await apiRequest(API_ENDPOINTS.NOTES, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setNotes(data.notes || []);
     } catch (error) {
       console.error("Error fetching notes:", error);
@@ -41,8 +48,12 @@ const Home = () => {
   // Create new note
   const createNote = async (noteData) => {
     try {
+      const token = await getToken();
       await apiRequest(API_ENDPOINTS.NOTES, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(noteData),
       });
       await fetchNotes(); // Refresh notes
@@ -56,8 +67,12 @@ const Home = () => {
   // Delete note
   const deleteNote = async (noteId) => {
     try {
+      const token = await getToken();
       await apiRequest(API_ENDPOINTS.NOTE_BY_ID(noteId), {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       await fetchNotes();
       return true;

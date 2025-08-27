@@ -1,18 +1,21 @@
 // API configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
+// Debug: Log the API URL in development
+if (import.meta.env.DEV) {
+  console.log("API_BASE_URL:", API_BASE_URL);
+  console.log("VITE_API_URL env var:", import.meta.env.VITE_API_URL);
+}
+
 export const API_ENDPOINTS = {
   NOTES: `${API_BASE_URL}/api/notes`,
   NOTE_BY_ID: (id) => `${API_BASE_URL}/api/notes/${id}`,
 };
 
 export const apiRequest = async (endpoint, options = {}) => {
-  const token = await window.Clerk?.session?.getToken();
-
   const defaultOptions = {
     headers: {
       "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
   };
