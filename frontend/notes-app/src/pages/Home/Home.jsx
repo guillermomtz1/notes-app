@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "@clerk/clerk-react";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
 import { MdAdd, MdClose, MdDelete } from "react-icons/md";
 import AddEditNotes from "./AddEditNotes";
 import Modal from "react-modal";
 import WeeklyProgressBar from "../../components/WeeklyProgressBar/WeeklyProgressBar";
+import { API_ENDPOINTS, apiRequest } from "../../utils/api";
 
 const Home = () => {
-  const { getToken } = useAuth();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,19 +29,8 @@ const Home = () => {
   // Fetch notes from API
   const fetchNotes = async () => {
     try {
-      const token = await getToken();
-
-      const response = await fetch("http://localhost:8000/api/notes", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setNotes(data.notes || []);
-      }
+      const data = await apiRequest(API_ENDPOINTS.NOTES);
+      setNotes(data.notes || []);
     } catch (error) {
       console.error("Error fetching notes:", error);
     } finally {
@@ -53,22 +41,12 @@ const Home = () => {
   // Create new note
   const createNote = async (noteData) => {
     try {
-      const token = await getToken();
-
-      const response = await fetch("http://localhost:8000/api/notes", {
+      await apiRequest(API_ENDPOINTS.NOTES, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(noteData),
       });
-
-      if (response.ok) {
-        await fetchNotes(); // Refresh notes
-        return true;
-      }
-      return false;
+      await fetchNotes(); // Refresh notes
+      return true;
     } catch (error) {
       console.error("Error creating note:", error);
       return false;
@@ -78,23 +56,11 @@ const Home = () => {
   // Delete note
   const deleteNote = async (noteId) => {
     try {
-      const token = await getToken();
-      const response = await fetch(
-        `http://localhost:8000/api/notes/${noteId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        await fetchNotes();
-        return true;
-      }
-      return false;
+      await apiRequest(API_ENDPOINTS.NOTE_BY_ID(noteId), {
+        method: "DELETE",
+      });
+      await fetchNotes();
+      return true;
     } catch (error) {
       console.error("Error deleting note:", error);
       return false;
