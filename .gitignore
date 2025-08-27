@@ -106,5 +106,5 @@ Thumbs.db
 *.bak
 *.backup
 
-# Project-specific ignores
-frontend/notes-app/src/pages/Dashboard/Dashboard.jsx
+# Documentation files
+CLERK_SETUP.md

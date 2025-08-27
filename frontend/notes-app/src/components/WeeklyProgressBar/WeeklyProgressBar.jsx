@@ -37,7 +37,7 @@ const WeeklyProgressBar = ({ activityData = [] }) => {
   const activeWeeks = weeks.filter((week) => week.hasActivity).length;
 
   return (
-    <div className="p-6 bg-surface border border-border rounded-xl w-80 md:w-96 lg:w-[28rem] mx-auto shadow-lg">
+    <div className="p-6 bg-surface border border-border rounded-xl w-80 md:w-96 lg:w-[28rem] mx-auto shadow-lg backdrop-blur-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text">Weekly Activity</h3>
         <div className="text-sm text-text-light ml-4">{activeWeeks}/52</div>
@@ -51,7 +51,7 @@ const WeeklyProgressBar = ({ activityData = [] }) => {
               w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer
               ${
                 week.hasActivity
-                  ? "bg-primary hover:bg-primary-light"
+                  ? "bg-primary hover:bg-primary-light glow-effect-green"
                   : "bg-surface-light border border-border hover:bg-border"
               }
             `}

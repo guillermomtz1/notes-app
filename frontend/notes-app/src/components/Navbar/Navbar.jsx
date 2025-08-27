@@ -1,25 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBookOpen, FaPenFancy, FaJournalWhills } from "react-icons/fa";
+import { useAuth, SignOutButton } from "@clerk/clerk-react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import SearchBar from "../SearchBar/SearchBar";
 
-const Navbar = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+const Navbar = ({ searchQuery, onSearchChange }) => {
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const { user } = useAuth();
   const Navigate = useNavigate;
+  const dropdownRef = useRef(null);
 
-  const onLogout = () => {
-    Navigate("/login");
-  };
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
 
-  const handleSearch = () => {};
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const onClearSearch = () => {
-    setSearchQuery("");
+    onSearchChange("");
   };
 
   return (
-    <nav className="bg-surface shadow-sm border-b border-border sticky top-0 z-50">
+    <nav className="sticky-navbar shadow-sm border-b border-border">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -36,41 +47,66 @@ const Navbar = () => {
             <SearchBar
               value={searchQuery}
               onChange={({ target }) => {
-                setSearchQuery(target.value);
+                onSearchChange(target.value);
               }}
-              handleSearch={handleSearch}
               onClearSearch={onClearSearch}
             />
-            {/* <Link
-              to="/"
-              className="text-text-light hover:text-primary transition-colors duration-200"
-            >
-              Home
-            </Link>
-            <Link
-              to="/features"
-              className="text-text-light hover:text-primary transition-colors duration-200"
-            >
-              Features
-            </Link>
-            <Link
-              to="/pricing"
-              className="text-text-light hover:text-primary transition-colors duration-200"
-            >
-              Pricing
-            </Link>
-            <Link
-              to="/about"
-              className="text-text-light hover:text-primary transition-colors duration-200"
-            >
-              About
-            </Link> */}
           </div>
 
           {/* Profile Info */}
           <div className="w-32"></div>
 
-          <ProfileInfo onLogout={onLogout} />
+          <div className="relative" ref={dropdownRef}>
+            {/* Profile Button */}
+            <button
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+              className="flex items-center space-x-2 text-text-light hover:text-primary transition-colors"
+            >
+              {/* User Profile Image */}
+              {user?.imageUrl ? (
+                <img
+                  src={user.imageUrl}
+                  alt={user.firstName || "User"}
+                  className="w-8 h-8 rounded-full border-2 border-border hover:border-primary transition-colors"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-black">
+                  {user?.firstName?.[0] ||
+                    user?.emailAddresses?.[0]?.emailAddress?.[0] ||
+                    "U"}
+                </div>
+              )}
+
+              {/* User Name */}
+              <span className="text-sm">
+                {user?.firstName || user?.emailAddresses?.[0]?.emailAddress}
+              </span>
+            </button>
+
+            {/* Profile Dropdown */}
+            {showProfileDropdown && (
+              <div className="absolute right-0 mt-2 w-48 bg-surface border border-border rounded-lg shadow-lg z-50">
+                <div className="p-3 border-b border-border">
+                  <p className="text-sm font-medium text-text">
+                    {user?.firstName && user?.lastName
+                      ? `${user.firstName} ${user.lastName}`
+                      : user?.firstName || "User"}
+                  </p>
+                  <p className="text-xs text-text-light">
+                    {user?.emailAddresses?.[0]?.emailAddress}
+                  </p>
+                </div>
+
+                <div className="p-1">
+                  <SignOutButton>
+                    <button className="w-full text-left px-3 py-2 text-sm text-text-light hover:text-primary hover:bg-surface-light rounded transition-colors">
+                      Sign Out
+                    </button>
+                  </SignOutButton>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

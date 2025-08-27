@@ -1,85 +1,33 @@
-import React, { useState } from "react";
-import Navbar from "../../components/Navbar/Navbar";
-import PasswordInput from "../../components/Input/passwordInput.jsx";
-import { Link } from "react-router-dom";
-import { validateEmail } from "../../utils/helper";
+import React from "react";
+import { SignUp } from "@clerk/clerk-react";
 
-const SignUp = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-
-    if (!name) {
-      setError("Please enter your name.");
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-
-    if (!password) {
-      setError("Please enter the password.");
-      return;
-    }
-    setError("");
-
-    //SingUp API call
-  };
+const SignUpPage = () => {
   return (
-    <div>
-      <Navbar />
-
-      <div className="flex items-center justify-center min-h-screen px-4">
-        <div className="w-96 border border-border rounded-xl bg-surface px-7 py-10 shadow-lg">
-          <form onSubmit={handleSignUp}>
-            <h4 className="text-2xl mb-7 text-text font-semibold">Sign Up</h4>
-
-            <input
-              type="text"
-              placeholder="Name"
-              className="input-box"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Email"
-              className="input-box"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-
-            <PasswordInput
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-
-            {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
-
-            <button type="submit" className="btn-primary">
-              Create Account
-            </button>
-
-            <p className="text-sm text-center mt-4 text-text-light">
-              Already have an account?{" "}
-              <Link
-                to="/Login"
-                className="font-medium text-primary hover:text-primary-light transition-colors"
-              >
-                Login
-              </Link>
-            </p>
-          </form>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <SignUp
+        appearance={{
+          elements: {
+            rootBox: "mx-auto",
+            card: "bg-surface border border-border shadow-lg",
+            headerTitle: "text-text text-2xl font-semibold",
+            headerSubtitle: "text-text-light",
+            formButtonPrimary:
+              "bg-primary hover:bg-primary-dark text-black font-medium",
+            formFieldInput:
+              "bg-surface border border-border text-text focus:border-primary",
+            formFieldLabel: "text-text-light",
+            footerActionLink: "text-primary hover:text-primary-light",
+            dividerLine: "bg-border",
+            dividerText: "text-text-light",
+            socialButtonsBlockButton:
+              "bg-surface border border-border text-text hover:bg-surface-light",
+            formFieldInputShowPasswordButton:
+              "text-text-muted hover:text-primary",
+          },
+        }}
+      />
     </div>
   );
 };
 
-export default SignUp;
+export default SignUpPage;

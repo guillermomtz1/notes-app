@@ -2,24 +2,20 @@ import React, { useState, useRef } from "react";
 import TagInput from "../../components/Input/TagInput";
 import { MdClose, MdFormatListBulleted, MdCalendarToday } from "react-icons/md";
 
-const AddEditNotes = ({ type, onClose }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
+  const [title, setTitle] = useState(noteData?.title || "");
+  const [content, setContent] = useState(noteData?.content || "");
   const [selectedDate, setSelectedDate] = useState(
-    new Date().toLocaleDateString("en-CA")
+    noteData?.date
+      ? new Date(noteData.date).toISOString().split("T")[0]
+      : new Date().toLocaleDateString("en-CA")
   );
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(noteData?.tags || []);
   const [error, setError] = useState(null);
 
   const textareaRef = useRef(null);
 
-  // Add Note
-  const addNewNote = async () => {};
-
-  // Edit Note
-  const editNote = async () => {};
-
-  const handleAddNote = () => {
+  const handleAddNote = async () => {
     if (!title) {
       setError("Please enter the title");
       return;
@@ -35,10 +31,29 @@ const AddEditNotes = ({ type, onClose }) => {
 
     setError("");
 
-    if (type === "edit") {
-      editNote();
+    const noteData = {
+      title,
+      content,
+      date: selectedDate,
+      tags,
+    };
+
+    if (onSubmit) {
+      try {
+        const result = await onSubmit(noteData);
+        if (result) {
+          // Clear form on success
+          setTitle("");
+          setContent("");
+          setSelectedDate(new Date().toLocaleDateString("en-CA"));
+          setTags([]);
+        }
+      } catch (error) {
+        console.error("Error submitting note:", error);
+        setError("Failed to create note. Please try again.");
+      }
     } else {
-      addNewNote();
+      setError("Form submission not configured");
     }
   };
 
@@ -175,7 +190,7 @@ Write your story here..."
         className="btn-primary font-medium mt-5 p-3"
         onClick={handleAddNote}
       >
-        ADD
+        {type === "edit" ? "UPDATE" : "ADD"}
       </button>
     </div>
   );
