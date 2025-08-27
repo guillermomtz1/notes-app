@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
@@ -29,7 +29,7 @@ const Home = () => {
   });
 
   // Fetch notes from API
-  const fetchNotes = async () => {
+  const fetchNotes = useCallback(async () => {
     try {
       const token = await getToken();
       const data = await apiRequest(API_ENDPOINTS.NOTES, {
@@ -43,7 +43,7 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [getToken]);
 
   // Create new note
   const createNote = async (noteData) => {
@@ -85,7 +85,7 @@ const Home = () => {
   // Load notes on component mount
   useEffect(() => {
     fetchNotes();
-  }, []);
+  }, [fetchNotes]);
 
   // Filter notes based on search query
   const filteredNotes = notes.filter((note) => {
