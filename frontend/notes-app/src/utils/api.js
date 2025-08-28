@@ -1,13 +1,10 @@
 // API configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE_URL = "https://bragjournal-backend.vercel.app";
 
 // Debug: Log the API URL in development
 if (import.meta.env.DEV) {
-  console.log("=== API DEBUG INFO ===");
   console.log("API_BASE_URL:", API_BASE_URL);
   console.log("VITE_API_URL env var:", import.meta.env.VITE_API_URL);
-  console.log("Environment:", import.meta.env.MODE);
-  console.log("=====================");
 }
 
 export const API_ENDPOINTS = {
