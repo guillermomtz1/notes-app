@@ -21,7 +21,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: process.env.CORS_ORIGIN || "*" }));
 
 // Clerk authentication middleware
 const authenticateUser = async (req, res, next) => {
@@ -58,6 +58,13 @@ app.get("/", (req, res) => {
 // Create a new note
 app.post("/api/notes", authenticateUser, async (req, res) => {
   try {
+    console.log("Create note content-type:", req.headers["content-type"]);
+    console.log("Create note req.body:", req.body);
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Empty JSON body received" });
+    }
     const { title, content, date, tags } = req.body;
     const clerkUserId = req.user.sub;
 
@@ -66,6 +73,14 @@ app.post("/api/notes", authenticateUser, async (req, res) => {
         .status(401)
         .json({ error: true, message: "Unauthorized: missing user id" });
     }
+
+    console.log("Incoming create note payload:", {
+      title,
+      hasContent: !!content,
+      date,
+      tagsCount: Array.isArray(tags) ? tags.length : 0,
+      clerkUserId,
+    });
 
     if (!title || !content || !date) {
       return res.status(400).json({
@@ -101,7 +116,11 @@ app.post("/api/notes", authenticateUser, async (req, res) => {
     if (error?.stack) {
       console.error(error.stack);
     }
-    res.status(500).json({ error: true, message: "Failed to create note" });
+    const message =
+      process.env.NODE_ENV === "development"
+        ? error?.message || "Failed to create note"
+        : "Failed to create note";
+    res.status(500).json({ error: true, message });
   }
 });
 
@@ -201,7 +220,8 @@ app.delete("/api/notes/:id", authenticateUser, async (req, res) => {
   }
 });
 
-app.listen(8000, () => {
-  console.log("Server running on port 8000");
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
   console.log("MongoDB connected successfully");
 });

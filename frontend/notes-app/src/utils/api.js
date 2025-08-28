@@ -13,16 +13,12 @@ export const API_ENDPOINTS = {
 };
 
 export const apiRequest = async (endpoint, options = {}) => {
-  const defaultOptions = {
+  const response = await fetch(endpoint, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options.headers,
+      ...(options.headers || {}),
     },
-  };
-
-  const response = await fetch(endpoint, {
-    ...defaultOptions,
-    ...options,
   });
 
   if (!response.ok) {
