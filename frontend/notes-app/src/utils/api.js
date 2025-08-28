@@ -1,5 +1,6 @@
 // API configuration
 const API_BASE_URL = "https://bragjournal-backend.vercel.app";
+console.log("DEPLOYED VERSION - API_BASE_URL:", API_BASE_URL);
 
 // Debug: Log the API URL in development
 if (import.meta.env.DEV) {
