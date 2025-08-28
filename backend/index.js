@@ -37,6 +37,12 @@ const authenticateUser = async (req, res, next) => {
     const payload = await verifyToken(token, {
       secretKey: process.env.CLERK_SECRET_KEY,
     });
+    if (!payload || !payload.sub) {
+      console.error("Auth error: Missing 'sub' in token payload", payload);
+      return res
+        .status(401)
+        .json({ error: true, message: "Invalid token payload" });
+    }
     req.user = payload;
     next();
   } catch (error) {
@@ -54,6 +60,12 @@ app.post("/api/notes", authenticateUser, async (req, res) => {
   try {
     const { title, content, date, tags } = req.body;
     const clerkUserId = req.user.sub;
+
+    if (!clerkUserId) {
+      return res
+        .status(401)
+        .json({ error: true, message: "Unauthorized: missing user id" });
+    }
 
     if (!title || !content || !date) {
       return res.status(400).json({
@@ -85,7 +97,10 @@ app.post("/api/notes", authenticateUser, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Create note error:", error);
+    console.error("Create note error:", error?.message || error);
+    if (error?.stack) {
+      console.error(error.stack);
+    }
     res.status(500).json({ error: true, message: "Failed to create note" });
   }
 });
