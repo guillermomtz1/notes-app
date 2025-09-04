@@ -7,6 +7,7 @@ import {
   FaShieldAlt,
   FaSync,
   FaMobile,
+  FaHeart,
 } from "react-icons/fa";
 
 const Landing = () => {
@@ -18,9 +19,9 @@ const Landing = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                <FaBookOpen className="text-black text-lg" />
+                <FaBookOpen className="text-white text-lg" />
               </div>
-              <span className="text-xl font-bold text-text">BragJournal</span>
+              <span className="text-xl font-bold text-text">BragJournl</span>
             </div>
             <div className="flex items-center space-x-4">
               <Link
@@ -53,13 +54,13 @@ const Landing = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/signup"
-                className="btn-primary px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center"
+                className="apple-gradient-bg px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200"
               >
                 Start Writing Today
               </Link>
               <Link
                 to="/login"
-                className="btn-secondary px-8 py-4 text-lg font-semibold whitespace-nowrap text-center"
+                className="btn-secondary px-8 py-4 text-lg font-semibold whitespace-nowrap text-center hover:text-white"
               >
                 Sign In
               </Link>
@@ -73,7 +74,7 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-text mb-4">
-              Why Choose BragJournal?
+              Why Choose BragJournl?
             </h2>
             <p className="text-xl text-text-light">
               Everything you need to stay organized and productive
@@ -145,7 +146,7 @@ const Landing = () => {
             </p>
             <Link
               to="/signup"
-              className="bg-black text-primary hover:bg-gray-900 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105 inline-block"
+              className="bg-white text-primary border-2 border-primary px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105 inline-block hover:bg-primary hover:text-white"
             >
               Create Your Free Account
             </Link>
@@ -158,10 +159,10 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <FaBookOpen className="text-black text-sm" />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
+                <FaBookOpen className="text-white text-lg" />
               </div>
-              <span className="text-lg font-bold text-text">BragJournal</span>
+              <span className="text-lg font-bold text-text">BragJournl</span>
             </div>
             <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
               <Link
@@ -171,7 +172,7 @@ const Landing = () => {
                 Privacy Policy
               </Link>
               <div className="text-text-muted">
-                © 2024 BragJournal. All rights reserved.
+                © 2024 BragJournl. All rights reserved.
               </div>
             </div>
           </div>

@@ -3,26 +3,27 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300&family=Nata+Sans:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @theme {
-  --color-primary: #00ffaa;
-  --color-primary-dark: #00cc88;
-  --color-primary-light: #33ffbb;
-  --color-secondary: #aa00ff;
-  --color-accent: #00ffaa;
-  --color-success: #00ffaa;
-  --color-error: #ff3366;
-  --color-warning: #ffaa00;
-  --color-background: #10101a;
-  --color-surface: #1a1a26;
-  --color-surface-light: #262636;
-  --color-text: #ffffff;
-  --color-text-light: #e0e0e0;
-  --color-text-muted: #a0a0a0;
-  --color-border: #3c3c4b;
-  --color-border-light: #4a4a5a;
-  --color-gradient-start: #aa00ff;
-  --color-gradient-end: #00ffaa;
-  --color-hero-bg: #10101a;
-  --color-card-bg: #1a1a26;
+  /* Light theme: Apple-inspired Blue */
+  --color-primary: #007aff; /* Apple blue */
+  --color-primary-dark: #0056cc;
+  --color-primary-light: #4da6ff;
+  --color-secondary: #a8c8ec; /* light blue */
+  --color-accent: #b2b5e0; /* light steel blue */
+  --color-success: #7fb069;
+  --color-error: #d64550;
+  --color-warning: #e9b44c;
+  --color-background: #ffffff; /* white page background */
+  --color-surface: #e8f2ff; /* light blue surface */
+  --color-surface-light: #f0f7ff; /* very light blue */
+  --color-text: #1f2937; /* dark slate for readability */
+  --color-text-light: #374151;
+  --color-text-muted: #6b7280;
+  --color-border: #c7d9f0; /* light blue border */
+  --color-border-light: #dde8f5;
+  --color-gradient-start: #007aff; /* Apple blue */
+  --color-gradient-end: #4da6ff; /* light Apple blue */
+  --color-hero-bg: #ffffff;
+  --color-card-bg: #e8f2ff;
 }
 
 @layer base {
@@ -64,11 +65,48 @@
   }
 
   .hero-gradient {
-    background: linear-gradient(135deg, #10101a 0%, #1a1a26 50%, #10101a 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-surface) 0%,
+      var(--color-background) 60%,
+      var(--color-surface) 100%
+    );
   }
 
   .futuristic-gradient {
-    background: linear-gradient(135deg, #aa00ff 0%, #00ffaa 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-gradient-start) 0%,
+      var(--color-gradient-end) 100%
+    );
+  }
+
+  .apple-gradient {
+    background: linear-gradient(
+      90deg,
+      #007aff 0%,
+      #5856d6 25%,
+      #af52de 50%,
+      #ff2d92 75%,
+      #ff9500 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .apple-gradient-bg {
+    background: linear-gradient(
+      90deg,
+      #007aff 0%,
+      #5856d6 25%,
+      #af52de 50%,
+      #ff2d92 75%,
+      #ff9500 100%
+    );
+    color: white;
+    border: none;
   }
 
   .glow-effect {
@@ -93,8 +131,8 @@
     top: 0;
     z-index: 9999;
     backdrop-filter: blur(15px);
-    background-color: rgba(26, 26, 38, 0.9);
-    border-bottom: 1px solid rgba(170, 0, 255, 0.2);
-    box-shadow: 0 4px 20px rgba(170, 0, 255, 0.1);
+    background-color: var(--color-background); /* same as page background */
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 4px 20px rgba(0, 122, 255, 0.12);
   }
 }

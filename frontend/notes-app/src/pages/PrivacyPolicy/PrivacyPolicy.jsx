@@ -13,7 +13,7 @@ const PrivacyPolicy = () => {
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
                 <FaBookOpen className="text-black text-lg" />
               </div>
-              <span className="text-xl font-bold text-text">BragJournal</span>
+              <span className="text-xl font-bold text-text">BragJournl</span>
             </div>
             <Link
               to="/"
@@ -37,7 +37,7 @@ const PrivacyPolicy = () => {
                 1. Information We Collect
               </h2>
               <p className="mb-4">
-                BragJournal (the “Company”, “we” or “us”) collects information
+                BragJournl (the “Company”, “we” or “us”) collects information
                 you provide directly to us, including:
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
@@ -141,7 +141,7 @@ const PrivacyPolicy = () => {
                 8. Children's Privacy
               </h2>
               <p>
-                BragJournal is not intended for children under 13 years of age.
+                BragJournl is not intended for children under 13 years of age.
                 We do not knowingly collect personal information from children
                 under 13.
               </p>

@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBookOpen, FaPenFancy, FaJournalWhills } from "react-icons/fa";
+import {
+  FaBookOpen,
+  FaPenFancy,
+  FaJournalWhills,
+  FaStar,
+  FaCircle,
+  FaHeart,
+} from "react-icons/fa";
 import { useAuth, SignOutButton } from "@clerk/clerk-react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import SearchBar from "../SearchBar/SearchBar";
@@ -35,10 +42,13 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-              <FaBookOpen className="text-black text-lg" />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
+              <FaBookOpen
+                className="text-white text-lg"
+                style={{ color: "#ffffff" }}
+              />
             </div>
-            <span className="text-xl font-bold text-text">BragJournal</span>
+            <span className="text-xl font-bold text-text">BragJournl</span>
           </Link>
 
           {/* Navigation Links - Centered */}
@@ -60,7 +70,7 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
             {/* Profile Button */}
             <button
               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-              className="flex items-center space-x-2 text-text-light hover:text-primary transition-colors"
+              className="flex items-center space-x-2 text-text-light hover:text-primary transition-colors cursor-pointer"
             >
               {/* User Profile Image */}
               {user?.imageUrl ? (
