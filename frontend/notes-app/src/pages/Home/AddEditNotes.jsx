@@ -31,16 +31,17 @@ const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
 
     setError("");
 
-    const noteData = {
+    const submitData = {
       title,
       content,
       date: selectedDate,
       tags,
+      ...(noteData?.id && { id: noteData.id }), // Include ID if editing
     };
 
     if (onSubmit) {
       try {
-        const result = await onSubmit(noteData);
+        const result = await onSubmit(submitData);
         if (result) {
           // Clear form on success
           setTitle("");
@@ -110,7 +111,7 @@ const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative h-full flex flex-col">
       <button
         className="w-7 h-7 rounded-full flex items-center justify-center absolute -top-2 -right-3 bg-surface border border-border hover:bg-surface-light hover:border-primary transition-colors cursor-pointer"
         onClick={onClose}
@@ -131,7 +132,7 @@ const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
         />
       </div>
 
-      <div className="flex flex-col gap-2 mt-4">
+      <div className="flex flex-col gap-2 mt-2">
         <label className="text-sm font-medium text-text-light uppercase tracking-wide">
           DATE
         </label>
@@ -145,7 +146,7 @@ const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 mt-4">
+      <div className="flex flex-col gap-2 mt-2 flex-1 min-h-0">
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium text-text-light uppercase tracking-wide">
             CONTENT
@@ -161,7 +162,7 @@ const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
         <textarea
           ref={textareaRef}
           type="text"
-          className="text-sm text-text bg-surface border border-border rounded-lg p-4 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-none leading-relaxed"
+          className="text-sm text-text bg-surface border border-border rounded-lg p-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-none leading-relaxed flex-1 overflow-y-auto min-h-0"
           placeholder="Share your achievements and impact...
 
 • What did you contribute? (design, development, insights)
@@ -170,7 +171,7 @@ const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
 • Any key metrics or improvements?
 
 Write your story here..."
-          rows={12}
+          rows={5}
           value={content}
           onChange={({ target }) => setContent(target.value)}
           onKeyDown={handleKeyDown}
@@ -184,10 +185,10 @@ Write your story here..."
         <TagInput tags={tags} setTags={setTags} />
       </div>
 
-      {error && <p className="text-red-500 text-xs pt-4">{error}</p>}
+      {error && <p className="text-red-500 text-xs pt-2">{error}</p>}
 
       <button
-        className="btn-primary font-medium mt-5 p-3"
+        className="btn-primary font-medium mt-4 p-2"
         onClick={handleAddNote}
       >
         {type === "edit" ? "UPDATE" : "ADD"}
