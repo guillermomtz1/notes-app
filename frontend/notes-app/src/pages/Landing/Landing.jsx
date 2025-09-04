@@ -44,7 +44,7 @@ const Landing = () => {
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-7xl font-bold text-text mb-6">
               Organize Your
-              <span className="text-primary"> Career Acomplishments</span>
+              <span className="text-primary"> Career Accomplishments</span>
             </h1>
             <p className="text-xl text-text-light mb-8 leading-relaxed">
               A beautiful, secure, and intuitive journal app that helps you
