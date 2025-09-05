@@ -11,6 +11,7 @@ import {
 import { useAuth, SignOutButton } from "@clerk/clerk-react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import SearchBar from "../SearchBar/SearchBar";
+import braggyLogo from "../../assets/braggy-logo.png";
 
 const Navbar = ({ searchQuery, onSearchChange }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -42,13 +43,12 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
-              <FaBookOpen
-                className="text-white text-lg"
-                style={{ color: "#ffffff" }}
-              />
-            </div>
-            <span className="text-xl font-bold text-text">BragJournl</span>
+            <img
+              src={braggyLogo}
+              alt="Braggy Logo"
+              className="w-8 h-8 rounded-lg"
+            />
+            <span className="text-xl font-bold text-text">Braggy</span>
           </Link>
 
           {/* Navigation Links - Centered */}

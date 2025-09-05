@@ -167,7 +167,7 @@ const PrivacyPolicy = () => {
                 contact us at:
               </p>
               <div className="mt-4 p-4 bg-surface-light rounded-lg">
-                <p className="text-text">Email: privacy@bragjournal.com</p>
+                <p className="text-text">Email: privacy@braggy.com</p>
               </div>
             </section>
 

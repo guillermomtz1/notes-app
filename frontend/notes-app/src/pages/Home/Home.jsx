@@ -3,9 +3,10 @@ import { useAuth } from "@clerk/clerk-react";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
 import { MdAdd, MdClose, MdDelete } from "react-icons/md";
-import AddEditNotes from "./AddEditNotes";
+import AddEditModal from "../../components/Modals/AddEditModal";
+import ViewModal from "../../components/Modals/ViewModal";
 import Modal from "react-modal";
-import WeeklyProgressBar from "../../components/WeeklyProgressBar/WeeklyProgressBar";
+import { FloatingActionButton } from "../../components/FloatingActionButton";
 import { API_ENDPOINTS, apiRequest } from "../../utils/api";
 
 const Home = () => {
@@ -169,28 +170,22 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Weekly Progress Bar and Add Button - Responsive Layout */}
-      {!openAddEditModal.isShown &&
-        !openViewModal.isShown &&
-        !openDeleteModal.isShown && (
-          <div className="md:absolute md:bottom-20 md:left-1/2 md:transform md:-translate-x-1/2 md:z-40 md:w-full md:flex md:justify-center">
-            <div className="mt-8 md:mt-0 flex flex-col items-center gap-4">
-              <WeeklyProgressBar activityData={activityData} />
-              <button
-                className="w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-primary-dark text-black transition-all duration-200 cursor-pointer hover:glow-effect-green z-50 md:hidden"
-                onClick={() => {
-                  setOpenAddEditModal({
-                    isShown: true,
-                    type: "add",
-                    data: null,
-                  });
-                }}
-              >
-                <MdAdd className="text-[32px] text-white" />
-              </button>
-            </div>
-          </div>
-        )}
+      {/* Floating Action Button with Progress Bar */}
+      <FloatingActionButton
+        isVisible={
+          !openAddEditModal.isShown &&
+          !openViewModal.isShown &&
+          !openDeleteModal.isShown
+        }
+        onAddClick={() => {
+          setOpenAddEditModal({
+            isShown: true,
+            type: "add",
+            data: null,
+          });
+        }}
+        activityData={activityData}
+      />
 
       {/* Desktop Add Button */}
       {!openAddEditModal.isShown &&
@@ -206,135 +201,36 @@ const Home = () => {
           </button>
         )}
 
-      <Modal
+      {/* Add/Edit Note Modal */}
+      <AddEditModal
         isOpen={openAddEditModal.isShown}
-        onRequestClose={() => {}}
-        style={{
-          overlay: {
-            backgroundColor: "rgba(0,0,0,0.7)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
+        onClose={() => {
+          setOpenAddEditModal({ isShown: false, type: "add", data: null });
         }}
-        contentLabel=""
-        className="w-[80%] max-w-xl mx-auto p-3 md:p-6 bg-surface rounded-lg overflow-hidden h-[500px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-surface [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full"
-      >
-        {/* Add-Edit Notes */}
-        <AddEditNotes
-          type={openAddEditModal.type}
-          noteData={openAddEditModal.data}
-          onClose={() => {
-            setOpenAddEditModal({ isShown: false, type: "add", data: null });
-          }}
-          onSubmit={async (noteData) => {
-            const success = await createNote(noteData);
-            if (success) {
-              setOpenAddEditModal({ isShown: false, type: "add", data: null });
-            }
-          }}
-        />
-      </Modal>
+        onSubmit={createNote}
+        type={openAddEditModal.type}
+        noteData={openAddEditModal.data}
+      />
 
       {/* View Note Modal */}
-      <Modal
+      <ViewModal
         isOpen={openViewModal.isShown}
-        onRequestClose={() => {
+        onClose={() => {
           setOpenViewModal({ isShown: false, data: null });
         }}
-        style={{
-          overlay: {
-            backgroundColor: "rgba(0,0,0,0.7)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
+        noteData={openViewModal.data}
+        onEdit={() => {
+          setOpenViewModal({ isShown: false, data: null });
+          setOpenAddEditModal({
+            isShown: true,
+            type: "edit",
+            data: {
+              ...openViewModal.data,
+              id: openViewModal.data._id, // Map _id to id for the edit modal
+            },
+          });
         }}
-        contentLabel=""
-        className="w-[85%] max-w-3xl mx-auto p-3 md:p-6 bg-surface rounded-lg overflow-y-auto max-h-[80vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-surface [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full"
-      >
-        {openViewModal.data && (
-          <div className="relative">
-            <button
-              className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center absolute -top-2 -right-2 md:-top-3 md:-right-3 bg-surface border border-border hover:bg-surface-light hover:border-primary transition-colors cursor-pointer z-10"
-              onClick={() => {
-                setOpenViewModal({ isShown: false, data: null });
-              }}
-            >
-              <MdClose className="text-lg md:text-xl text-text-muted hover:text-primary transition-colors" />
-            </button>
-
-            <div className="mb-4 md:mb-6">
-              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-text mb-2 leading-tight">
-                {openViewModal.data.title}
-              </h1>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-text-light text-xs md:text-sm">
-                <span>
-                  {new Date(openViewModal.data.date).toLocaleDateString(
-                    "en-US",
-                    {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    }
-                  )}
-                </span>
-                <span>
-                  Created:{" "}
-                  {new Date(openViewModal.data.createdOn).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-
-            <div className="mb-4 md:mb-6">
-              <h2 className="text-base md:text-lg font-semibold text-text mb-2 md:mb-3">
-                Content
-              </h2>
-              <div className="bg-surface-light border border-border rounded-lg p-3 md:p-4 text-text leading-relaxed whitespace-pre-wrap text-sm md:text-base">
-                {openViewModal.data.content}
-              </div>
-            </div>
-
-            {openViewModal.data.tags && openViewModal.data.tags.length > 0 && (
-              <div className="mb-4 md:mb-6">
-                <h2 className="text-base md:text-lg font-semibold text-text mb-2 md:mb-3">
-                  Tags
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {openViewModal.data.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="bg-primary/20 text-primary border border-primary/30 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-center pt-3 md:pt-4 border-t border-border">
-              <button
-                className="bg-primary hover:bg-primary-dark text-black font-medium py-2 md:py-3 px-6 md:px-8 rounded-lg transition-colors cursor-pointer text-sm md:text-base"
-                onClick={() => {
-                  setOpenViewModal({ isShown: false, data: null });
-                  setOpenAddEditModal({
-                    isShown: true,
-                    type: "edit",
-                    data: {
-                      ...openViewModal.data,
-                      id: openViewModal.data._id, // Map _id to id for the edit modal
-                    },
-                  });
-                }}
-              >
-                Edit Note
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
+      />
 
       {/* Delete Confirmation Modal */}
       <Modal

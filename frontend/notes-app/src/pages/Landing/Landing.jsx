@@ -9,6 +9,7 @@ import {
   FaMobile,
   FaHeart,
 } from "react-icons/fa";
+import braggyLogo from "../../assets/braggy-logo.png";
 
 const Landing = () => {
   return (
@@ -18,10 +19,12 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                <FaBookOpen className="text-white text-lg" />
-              </div>
-              <span className="text-xl font-bold text-text">BragJournl</span>
+              <img
+                src={braggyLogo}
+                alt="Braggy Logo"
+                className="w-8 h-8 rounded-lg shadow-lg"
+              />
+              <span className="text-xl font-bold text-text">Braggy</span>
             </div>
             <div className="flex items-center space-x-4">
               <Link
@@ -159,10 +162,12 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-primary">
-                <FaBookOpen className="text-white text-lg" />
-              </div>
-              <span className="text-lg font-bold text-text">BragJournl</span>
+              <img
+                src={braggyLogo}
+                alt="Braggy Logo"
+                className="w-8 h-8 rounded-lg"
+              />
+              <span className="text-lg font-bold text-text">Braggy</span>
             </div>
             <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
               <Link
@@ -172,7 +177,7 @@ const Landing = () => {
                 Privacy Policy
               </Link>
               <div className="text-text-muted">
-                © 2024 BragJournl. All rights reserved.
+                © 2024 Braggy. All rights reserved.
               </div>
             </div>
           </div>
