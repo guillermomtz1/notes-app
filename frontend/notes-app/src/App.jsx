@@ -14,6 +14,7 @@ const App = () => {
     // Set the app element for react-modal accessibility
     Modal.setAppElement("#root");
   }, []);
+
   return (
     <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
       <Router>

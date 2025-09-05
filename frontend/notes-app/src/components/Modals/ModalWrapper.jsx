@@ -22,10 +22,7 @@ const ModalWrapper = ({
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       style={{
-        overlay: {
-          ...defaultOverlayStyle,
-          ...overlayClassName,
-        },
+        overlay: defaultOverlayStyle,
       }}
       contentLabel={contentLabel}
       className={`${className} [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-surface [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full`}

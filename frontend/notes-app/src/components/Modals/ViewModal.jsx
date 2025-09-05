@@ -1,9 +1,9 @@
 import React from "react";
 import { MdClose } from "react-icons/md";
-import { ModalWrapper } from "./ModalWrapper";
+import ModalWrapper from "./ModalWrapper";
 
 const ViewModal = ({ isOpen, onClose, noteData, onEdit }) => {
-  if (!noteData) return null;
+  if (!isOpen || !noteData) return null;
 
   return (
     <ModalWrapper

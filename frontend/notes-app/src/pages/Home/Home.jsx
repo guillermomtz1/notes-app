@@ -220,15 +220,17 @@ const Home = () => {
         }}
         noteData={openViewModal.data}
         onEdit={() => {
-          setOpenViewModal({ isShown: false, data: null });
-          setOpenAddEditModal({
-            isShown: true,
-            type: "edit",
-            data: {
-              ...openViewModal.data,
-              id: openViewModal.data._id, // Map _id to id for the edit modal
-            },
-          });
+          if (openViewModal.data) {
+            setOpenViewModal({ isShown: false, data: null });
+            setOpenAddEditModal({
+              isShown: true,
+              type: "edit",
+              data: {
+                ...openViewModal.data,
+                id: openViewModal.data._id, // Map _id to id for the edit modal
+              },
+            });
+          }
         }}
       />
 

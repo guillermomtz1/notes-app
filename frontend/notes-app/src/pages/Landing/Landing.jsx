@@ -77,7 +77,7 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-text mb-4">
-              Why Choose BragJournl?
+              Why Choose Braggy?
             </h2>
             <p className="text-xl text-text-light">
               Everything you need to stay organized and productive

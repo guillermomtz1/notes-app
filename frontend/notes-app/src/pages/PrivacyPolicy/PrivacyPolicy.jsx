@@ -13,7 +13,7 @@ const PrivacyPolicy = () => {
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
                 <FaBookOpen className="text-black text-lg" />
               </div>
-              <span className="text-xl font-bold text-text">BragJournl</span>
+              <span className="text-xl font-bold text-text">Braggy</span>
             </div>
             <Link
               to="/"
@@ -37,8 +37,8 @@ const PrivacyPolicy = () => {
                 1. Information We Collect
               </h2>
               <p className="mb-4">
-                BragJournl (the “Company”, “we” or “us”) collects information
-                you provide directly to us, including:
+                Braggy (the “Company”, “we” or “us”) collects information you
+                provide directly to us, including:
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Account information (name, email address)</li>
