@@ -12,11 +12,11 @@ const FloatingActionButton = ({
   if (!isVisible) return null;
 
   return (
-    <div className="md:absolute md:bottom-20 md:left-1/2 md:transform md:-translate-x-1/2 md:z-40 md:w-full md:flex md:justify-center">
-      <div className="mt-8 md:mt-0 flex flex-col items-center gap-4">
+    <div className="flex justify-center items-center w-full mt-8">
+      <div className="flex flex-row items-center gap-2">
         {showProgressBar && <WeeklyProgressBar activityData={activityData} />}
         <button
-          className={`w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-primary-dark text-black transition-all duration-200 cursor-pointer hover:glow-effect-green z-50 md:hidden ${className}`}
+          className={`w-16 h-16 flex items-center justify-center rounded-2xl bg-secondary hover:bg-secondary-dark text-black transition-all duration-200 cursor-pointer hover:glow-effect-bright-green z-50 ${className}`}
           onClick={onAddClick}
         >
           <MdAdd className="text-[32px] text-white" />

@@ -99,17 +99,19 @@ const Home = () => {
     fetchNotes();
   }, [fetchNotes]);
 
-  // Filter notes based on search query
-  const filteredNotes = notes.filter((note) => {
-    if (!searchQuery.trim()) return true;
+  // Filter and sort notes based on search query and date
+  const filteredNotes = notes
+    .filter((note) => {
+      if (!searchQuery.trim()) return true;
 
-    const query = searchQuery.toLowerCase();
-    return (
-      note.title.toLowerCase().includes(query) ||
-      note.content.toLowerCase().includes(query) ||
-      note.tags?.some((tag) => tag.toLowerCase().includes(query))
-    );
-  });
+      const query = searchQuery.toLowerCase();
+      return (
+        note.title.toLowerCase().includes(query) ||
+        note.content.toLowerCase().includes(query) ||
+        note.tags?.some((tag) => tag.toLowerCase().includes(query))
+      );
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date, latest first
 
   // Generate activity data from notes
   const activityData = notes.map((note) => ({
@@ -120,7 +122,24 @@ const Home = () => {
     <>
       <Navbar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
-      <div className="container mx-auto px-4 md:px-6">
+      {/* Floating Action Button with Progress Bar */}
+      <FloatingActionButton
+        isVisible={
+          !openAddEditModal.isShown &&
+          !openViewModal.isShown &&
+          !openDeleteModal.isShown
+        }
+        onAddClick={() => {
+          setOpenAddEditModal({
+            isShown: true,
+            type: "add",
+            data: null,
+          });
+        }}
+        activityData={activityData}
+      />
+
+      <div className="container mx-auto px-4 md:px-6 pb-16">
         {/* Grid set-up */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
           {loading ? (
@@ -169,37 +188,6 @@ const Home = () => {
           )}
         </div>
       </div>
-
-      {/* Floating Action Button with Progress Bar */}
-      <FloatingActionButton
-        isVisible={
-          !openAddEditModal.isShown &&
-          !openViewModal.isShown &&
-          !openDeleteModal.isShown
-        }
-        onAddClick={() => {
-          setOpenAddEditModal({
-            isShown: true,
-            type: "add",
-            data: null,
-          });
-        }}
-        activityData={activityData}
-      />
-
-      {/* Desktop Add Button */}
-      {!openAddEditModal.isShown &&
-        !openViewModal.isShown &&
-        !openDeleteModal.isShown && (
-          <button
-            className="hidden md:flex w-16 h-16 items-center justify-center rounded-2xl bg-primary hover:bg-primary-dark text-black absolute right-10 bottom-20 transition-all duration-200 cursor-pointer hover:glow-effect-green z-50"
-            onClick={() => {
-              setOpenAddEditModal({ isShown: true, type: "add", data: null });
-            }}
-          >
-            <MdAdd className="text-[32px] text-white" />
-          </button>
-        )}
 
       {/* Add/Edit Note Modal */}
       <AddEditModal

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaBookOpen, FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
+import braggyLogo from "../../assets/braggy-logo.png";
 
 const PrivacyPolicy = () => {
   return (
@@ -10,9 +11,11 @@ const PrivacyPolicy = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                <FaBookOpen className="text-black text-lg" />
-              </div>
+              <img
+                src={braggyLogo}
+                alt="Braggy Logo"
+                className="w-8 h-8 rounded-lg shadow-lg"
+              />
               <span className="text-xl font-bold text-text">Braggy</span>
             </div>
             <Link

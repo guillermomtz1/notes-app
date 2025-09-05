@@ -64,8 +64,6 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
           </div>
 
           {/* Profile Info */}
-          <div className="w-32"></div>
-
           <div className="relative" ref={dropdownRef}>
             {/* Profile Button */}
             <button

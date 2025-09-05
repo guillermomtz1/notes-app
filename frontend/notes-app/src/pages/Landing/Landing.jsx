@@ -33,8 +33,11 @@ const Landing = () => {
               >
                 Login
               </Link>
-              <Link to="/signup" className="btn-primary px-6 py-2 rounded-lg">
-                Get Started
+              <Link
+                to="/signup"
+                className="btn-primary px-4 py-3 rounded-lg text-sm font-medium text-center"
+              >
+                Sign Up
               </Link>
             </div>
           </div>
@@ -46,18 +49,18 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-7xl font-bold text-text mb-6">
-              Organize Your
-              <span className="text-primary"> Career Accomplishments</span>
+              🛠️ Built for developers, by developers.
             </h1>
             <p className="text-xl text-text-light mb-8 leading-relaxed">
-              A beautiful, secure, and intuitive journal app that helps you
-              capture ideas, organize your thoughts, and stay productive across
-              all your devices.
+              We get it. You squash bugs all day, refactor ancient code, and
+              quietly make magic happen — but when review time rolls around,
+              your brain goes blank. Braggy's here to help you keep track as{" "}
+              <em>you go</em>, without the fluff.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/signup"
-                className="apple-gradient-bg px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200"
+                className="gradient-bg px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white"
               >
                 Start Writing Today
               </Link>
@@ -87,50 +90,49 @@ const Landing = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaPenFancy className="text-2xl text-black" />
+                <span className="text-2xl">📝</span>
               </div>
               <h3 className="text-xl font-semibold text-text mb-2 text-center">
-                Beautiful Notes
+                Quick & dirty journaling
               </h3>
               <p className="text-text-light text-center">
-                Create and organize notes with a clean, intuitive interface
+                Log a win in under 30 seconds. No meetings required.
               </p>
             </div>
 
             <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaShieldAlt className="text-2xl text-black" />
+                <span className="text-2xl">🧠</span>
               </div>
               <h3 className="text-xl font-semibold text-text mb-2 text-center">
-                Secure & Private
+                Remember what you did
               </h3>
               <p className="text-text-light text-center">
-                Your notes are encrypted and protected with enterprise-grade
-                security
+                Stop blanking out during 1:1s and reviews.
               </p>
             </div>
 
             <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaSync className="text-2xl text-black" />
+                <span className="text-2xl">🔒</span>
+              </div>
+              <h3 className="text-xl font-semibold text-text mb-2 text-center">
+                Private by default
+              </h3>
+              <p className="text-text-light text-center">
+                This isn't LinkedIn. It's your brag space.
+              </p>
+            </div>
+
+            <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🔄</span>
               </div>
               <h3 className="text-xl font-semibold text-text mb-2 text-center">
                 Real-time Sync
               </h3>
               <p className="text-text-light text-center">
                 Access your notes anywhere with automatic cloud synchronization
-              </p>
-            </div>
-
-            <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
-              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaMobile className="text-2xl text-black" />
-              </div>
-              <h3 className="text-xl font-semibold text-text mb-2 text-center">
-                Cross-platform
-              </h3>
-              <p className="text-text-light text-center">
-                Works seamlessly across desktop, tablet, and mobile devices
               </p>
             </div>
           </div>
@@ -140,16 +142,16 @@ const Landing = () => {
       {/* CTA Section */}
       <div className="py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="futuristic-gradient rounded-2xl p-12 text-center">
-            <h2 className="text-4xl font-bold text-black mb-4">
+          <div className="gradient-bg rounded-2xl p-12 text-center">
+            <h2 className="text-4xl font-bold text-white mb-4">
               Ready to Get Started?
             </h2>
-            <p className="text-xl text-black/80 mb-8">
+            <p className="text-xl text-white/90 mb-8">
               Start organizing your accomplishments today.
             </p>
             <Link
               to="/signup"
-              className="bg-white text-primary border-2 border-primary px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105 inline-block hover:bg-primary hover:text-white"
+              className="bg-white text-primary border-2 border-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105 inline-block hover:bg-primary hover:text-white"
             >
               Create Your Free Account
             </Link>

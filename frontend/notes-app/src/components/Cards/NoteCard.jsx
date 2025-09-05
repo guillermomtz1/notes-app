@@ -41,7 +41,7 @@ const NoteCard = ({
         <div className="text-xs text-text-muted">{tags}</div>
         <div className="flex items-center gap-2">
           <MdCreate
-            className="icon-btn hover:text-primary transition-colors duration-200"
+            className="icon-btn-green hover:text-secondary transition-colors duration-200"
             onClick={(e) => {
               e.stopPropagation();
               onEdit();
