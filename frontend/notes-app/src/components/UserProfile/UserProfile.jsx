@@ -22,7 +22,7 @@ const UserProfile = () => {
             className="w-20 h-20 rounded-full mx-auto mb-4 border-4 border-primary"
           />
         ) : (
-          <div className="w-20 h-20 rounded-full mx-auto mb-4 bg-primary flex items-center justify-center text-2xl font-bold text-black">
+          <div className="w-20 h-20 rounded-full mx-auto mb-4 bg-primary flex items-center justify-center text-2xl font-bold text-white">
             {user.firstName?.[0] ||
               user.emailAddresses?.[0]?.emailAddress?.[0] ||
               "U"}

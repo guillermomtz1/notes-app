@@ -8,14 +8,15 @@ import {
   FaCircle,
   FaHeart,
 } from "react-icons/fa";
-import { useAuth, SignOutButton } from "@clerk/clerk-react";
+import { useAuth, SignOutButton, useUser } from "@clerk/clerk-react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import SearchBar from "../SearchBar/SearchBar";
 import braggyLogo from "../../assets/braggy-logo.png";
 
 const Navbar = ({ searchQuery, onSearchChange }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const { user } = useAuth();
+  const { user, isSignedIn } = useAuth();
+  const { user: userFromHook } = useUser();
   const Navigate = useNavigate;
   const dropdownRef = useRef(null);
 
@@ -78,16 +79,19 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
                   className="w-8 h-8 rounded-full border-2 border-border hover:border-primary transition-colors"
                 />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-black">
-                  {user?.firstName?.[0] ||
-                    user?.emailAddresses?.[0]?.emailAddress?.[0] ||
-                    "U"}
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-white">
+                  {(userFromHook || user)?.firstName?.[0] ||
+                    (
+                      userFromHook || user
+                    )?.emailAddresses?.[0]?.emailAddress?.[0]?.toUpperCase() ||
+                    (isSignedIn ? "S" : "U")}
                 </div>
               )}
 
               {/* User Name */}
               <span className="text-sm">
-                {user?.firstName || user?.emailAddresses?.[0]?.emailAddress}
+                {(userFromHook || user)?.firstName ||
+                  (userFromHook || user)?.emailAddresses?.[0]?.emailAddress}
               </span>
             </button>
 
@@ -96,12 +100,33 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
               <div className="absolute right-0 mt-2 w-48 bg-surface border border-border rounded-lg shadow-lg z-50">
                 <div className="p-3 border-b border-border">
                   <p className="text-sm font-medium text-text">
-                    {user?.firstName && user?.lastName
-                      ? `${user.firstName} ${user.lastName}`
-                      : user?.firstName || "User"}
+                    {(userFromHook || user)?.firstName &&
+                    (userFromHook || user)?.lastName &&
+                    (userFromHook || user).firstName.trim() &&
+                    (userFromHook || user).lastName.trim()
+                      ? `${(userFromHook || user).firstName} ${
+                          (userFromHook || user).lastName
+                        }`
+                      : ((userFromHook || user)?.firstName &&
+                          (userFromHook || user).firstName.trim()) ||
+                        ((userFromHook || user)?.fullName &&
+                          (userFromHook || user).fullName.trim()) ||
+                        ((userFromHook || user)?.username &&
+                          (userFromHook || user).username.trim()) ||
+                        ((userFromHook || user)?.emailAddresses?.[0]
+                          ?.emailAddress &&
+                        (
+                          userFromHook || user
+                        ).emailAddresses[0].emailAddress.trim()
+                          ? (
+                              userFromHook || user
+                            ).emailAddresses[0].emailAddress.split("@")[0]
+                          : isSignedIn
+                          ? "Signed In User"
+                          : "User")}
                   </p>
                   <p className="text-xs text-text-light">
-                    {user?.emailAddresses?.[0]?.emailAddress}
+                    {(userFromHook || user)?.emailAddresses?.[0]?.emailAddress}
                   </p>
                 </div>
 

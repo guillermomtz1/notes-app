@@ -179,6 +179,14 @@
     color: var(--color-text-green);
   }
 
+  .hover-purple-light {
+    transition: background-color 0.3s ease;
+  }
+
+  .hover-purple-light:hover {
+    background-color: #c3acd0;
+  }
+
   .icon-btn {
     @apply text-xl text-slate-600 cursor-pointer hover:text-primary transition-colors duration-200;
   }

@@ -88,7 +88,7 @@ const Landing = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
+            <div className="card hover-purple-light transition-all duration-300 hover:glow-effect">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">📝</span>
               </div>
@@ -100,7 +100,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
+            <div className="card hover-purple-light transition-all duration-300 hover:glow-effect">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🧠</span>
               </div>
@@ -112,7 +112,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
+            <div className="card hover-purple-light transition-all duration-300 hover:glow-effect">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🔒</span>
               </div>
@@ -124,7 +124,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className="card hover:bg-surface-light transition-all duration-300 hover:glow-effect">
+            <div className="card hover-purple-light transition-all duration-300 hover:glow-effect">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🔄</span>
               </div>
