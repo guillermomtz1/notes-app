@@ -249,7 +249,7 @@ const Home = () => {
 
           <div className="flex gap-3">
             <button
-              className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+              className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer"
               onClick={() => {
                 setOpenDeleteModal({
                   isShown: false,
@@ -261,7 +261,7 @@ const Home = () => {
               Cancel
             </button>
             <button
-              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer"
               onClick={async () => {
                 if (openDeleteModal.noteId) {
                   await deleteNote(openDeleteModal.noteId);

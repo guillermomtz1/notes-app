@@ -97,9 +97,9 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
 
             {/* Profile Dropdown */}
             {showProfileDropdown && (
-              <div className="absolute right-0 mt-2 w-48 bg-surface border border-border rounded-lg shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-56 bg-surface border border-border rounded-lg shadow-lg z-50">
                 <div className="p-3 border-b border-border">
-                  <p className="text-sm font-medium text-text">
+                  <p className="text-sm font-medium text-text break-words">
                     {(userFromHook || user)?.firstName &&
                     (userFromHook || user)?.lastName &&
                     (userFromHook || user).firstName.trim() &&
@@ -132,7 +132,7 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
 
                 <div className="p-1">
                   <SignOutButton>
-                    <button className="w-full text-left px-3 py-2 text-sm text-text-light hover:text-primary hover:bg-surface-light rounded transition-colors">
+                    <button className="w-full text-left px-3 py-2 text-sm text-text-light hover:text-primary hover:bg-surface-light rounded transition-colors cursor-pointer">
                       Sign Out
                     </button>
                   </SignOutButton>

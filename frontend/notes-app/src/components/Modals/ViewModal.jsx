@@ -68,7 +68,7 @@ const ViewModal = ({ isOpen, onClose, noteData, onEdit }) => {
 
         <div className="flex justify-center pt-3 md:pt-4 border-t border-border">
           <button
-            className="bg-primary hover:bg-primary-dark text-black font-medium py-2 md:py-3 px-6 md:px-8 rounded-lg transition-colors cursor-pointer text-sm md:text-base"
+            className="bg-primary hover:bg-primary-dark text-white font-medium py-2 md:py-3 px-6 md:px-8 rounded-lg transition-colors cursor-pointer text-sm md:text-base"
             onClick={onEdit}
           >
             Edit Note
