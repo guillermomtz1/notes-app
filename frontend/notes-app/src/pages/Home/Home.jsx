@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
 import { MdAdd, MdClose, MdDelete } from "react-icons/md";
@@ -11,6 +12,8 @@ import { API_ENDPOINTS, apiRequest } from "../../utils/api";
 
 const Home = () => {
   const { getToken } = useAuth();
+  const { user } = useUser();
+  const navigate = useNavigate();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,6 +31,10 @@ const Home = () => {
     noteId: null,
     noteTitle: "",
   });
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  // Check if user has premium subscription
+  const hasPremium = user?.publicMetadata?.subscription === "premium";
 
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
@@ -60,13 +67,27 @@ const Home = () => {
       console.log("Endpoint:", endpoint);
       console.log("Token:", token ? "Present" : "Missing");
 
-      await apiRequest(endpoint, {
+      const response = await fetch(endpoint, {
         method,
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(noteData),
       });
+
+      if (!response.ok) {
+        if (response.status === 403) {
+          // Note limit reached - show upgrade modal (only for free users)
+          if (!hasPremium) {
+            setShowUpgradeModal(true);
+          }
+          return false;
+        }
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      await response.json();
       console.log("API request successful");
       await fetchNotes(); // Refresh notes
       return true;
@@ -140,8 +161,72 @@ const Home = () => {
       />
 
       <div className="container mx-auto px-4 md:px-6 pb-16">
+        {/* Note Counter - Only show for free users */}
+        {!hasPremium && (
+          <div className="mt-8 mb-4">
+            <div className="bg-surface rounded-lg p-4 border border-border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-text">
+                    Your Notes
+                  </h3>
+                  <p className="text-sm text-text-light">
+                    {notes.length} of 10 (Free Plan) notes used
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="w-32 bg-surface-light rounded-full h-2 mb-2">
+                    <div
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        notes.length >= 10 ? "bg-red-500" : "bg-primary"
+                      }`}
+                      style={{
+                        width: `${Math.min((notes.length / 10) * 100, 100)}%`,
+                      }}
+                    ></div>
+                  </div>
+                  {!hasPremium && (
+                    <button
+                      onClick={() => navigate("/subscription")}
+                      className="text-sm text-primary hover:text-primary-dark font-medium cursor-pointer bg-transparent border border-primary px-3 py-1 rounded-md hover:bg-primary hover:text-white transition-all duration-200"
+                    >
+                      Upgrade
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Premium User Note Count - Simple display */}
+        {hasPremium && (
+          <div className="mt-8 mb-4">
+            <div className="bg-surface rounded-lg p-4 border border-border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-text">
+                    Your Notes
+                  </h3>
+                  <p className="text-sm text-text-light">
+                    {notes.length} notes • Premium Plan
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-green-600 font-medium">
+                      Unlimited
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Grid set-up */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {loading ? (
             <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center text-text-light">
               Loading notes...
@@ -275,6 +360,62 @@ const Home = () => {
               autoFocus
             >
               Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Upgrade Modal */}
+      <Modal
+        isOpen={showUpgradeModal}
+        onRequestClose={() => setShowUpgradeModal(false)}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0,0,0,0.7)",
+          },
+        }}
+        contentLabel="Upgrade to Premium"
+        className="w-[500px] bg-surface rounded-md mx-auto mt-40 p-6"
+      >
+        <div className="text-center">
+          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <MdAdd className="text-2xl text-white" />
+          </div>
+
+          <h2 className="text-2xl font-bold text-text mb-2">
+            Upgrade to Premium
+          </h2>
+          <p className="text-text-light mb-6">
+            You've reached the limit of 10 notes on the free plan. Upgrade to
+            Premium for unlimited notes and premium features!
+          </p>
+
+          <div className="bg-surface-light rounded-lg p-4 mb-6">
+            <h3 className="font-semibold text-text mb-2">Premium Features:</h3>
+            <ul className="text-sm text-text-light space-y-1">
+              <li>• Unlimited notes</li>
+              <li>• Priority support</li>
+              <li>• Export features (Coming Soon)</li>
+              <li>• AI Summary (Coming Soon)</li>
+            </ul>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-colors cursor-pointer"
+              onClick={() => setShowUpgradeModal(false)}
+            >
+              Maybe Later
+            </button>
+            <button
+              className="flex-1 btn-primary py-3"
+              onClick={() => {
+                setShowUpgradeModal(false);
+                navigate("/subscription");
+              }}
+              autoFocus
+            >
+              Upgrade Now - $1.99/month
             </button>
           </div>
         </div>

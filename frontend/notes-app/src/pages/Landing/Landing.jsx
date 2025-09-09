@@ -10,6 +10,8 @@ import {
   FaHeart,
 } from "react-icons/fa";
 import braggyLogo from "../../assets/braggy-logo.png";
+import { PricingSection } from "../../components/Pricing";
+import SubscriptionPricing from "../../components/Pricing/SubscriptionPricing";
 
 const Landing = () => {
   return (
@@ -138,6 +140,9 @@ const Landing = () => {
           </div>
         </div>
       </div>
+
+      {/* Pricing Section */}
+      <SubscriptionPricing />
 
       {/* CTA Section */}
       <div className="py-20">
