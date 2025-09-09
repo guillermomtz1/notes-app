@@ -131,6 +131,13 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
                 </div>
 
                 <div className="p-1">
+                  <Link
+                    to="/subscription"
+                    className="w-full text-left px-3 py-2 text-sm text-text-light hover:text-primary hover:bg-surface-light rounded transition-colors cursor-pointer block"
+                    onClick={() => setShowProfileDropdown(false)}
+                  >
+                    Subscription & Billing
+                  </Link>
                   <SignOutButton>
                     <button className="w-full text-left px-3 py-2 text-sm text-text-light hover:text-primary hover:bg-surface-light rounded transition-colors cursor-pointer">
                       Sign Out

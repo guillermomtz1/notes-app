@@ -98,19 +98,6 @@ const SubscriptionUpgrade = () => {
           </p>
         </div>
       </div>
-
-      {/* Real Implementation Instructions */}
-      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h4 className="text-blue-800 font-medium mb-2">
-          🚀 For Production Implementation:
-        </h4>
-        <ul className="text-blue-700 text-sm space-y-1">
-          <li>• Set up Clerk with Stripe integration</li>
-          <li>• Configure subscription plans in Clerk dashboard</li>
-          <li>• Use Clerk's built-in subscription components</li>
-          <li>• Handle webhooks for subscription status updates</li>
-        </ul>
-      </div>
     </div>
   );
 };
