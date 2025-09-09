@@ -18,6 +18,10 @@ const authenticateUser = async (req, res, next) => {
       console.error("Auth error: Missing 'sub' in token payload", payload);
       return sendUnauthorizedError(res, MESSAGES.INVALID_TOKEN_PAYLOAD);
     }
+
+    // Log successful authentication
+    console.log(`User authenticated: ${payload.sub}`);
+
     req.user = payload;
     next();
   } catch (error) {

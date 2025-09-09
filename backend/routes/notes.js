@@ -21,13 +21,7 @@ router.post(
     const { title, content, date, tags } = req.body;
     const clerkUserId = req.user.sub;
 
-    console.log("Incoming create note payload:", {
-      title,
-      hasContent: !!content,
-      date,
-      tagsCount: Array.isArray(tags) ? tags.length : 0,
-      clerkUserId,
-    });
+    console.log(`Creating note for user: ${clerkUserId}`);
 
     const note = await noteService.createNote({
       clerkUserId,

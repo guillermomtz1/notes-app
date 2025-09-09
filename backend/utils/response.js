@@ -63,6 +63,13 @@ const sendUnauthorizedError = (res, message = MESSAGES.INVALID_TOKEN) => {
 };
 
 /**
+ * Send forbidden error response
+ */
+const sendForbiddenError = (res, message = "Access forbidden") => {
+  return sendError(res, HTTP_STATUS.FORBIDDEN, message);
+};
+
+/**
  * Send internal server error response
  */
 const sendInternalError = (
@@ -79,5 +86,6 @@ module.exports = {
   sendValidationError,
   sendNotFoundError,
   sendUnauthorizedError,
+  sendForbiddenError,
   sendInternalError,
 };

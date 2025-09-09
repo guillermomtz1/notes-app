@@ -6,8 +6,11 @@ const checkPremiumSubscription = async (req, res, next) => {
   try {
     const user = req.user;
 
-    // Check if user has premium subscription
-    const hasPremium = user?.publicMetadata?.subscription === "premium";
+    // Check multiple possible fields for subscription status
+    const hasPremiumFromMetadata =
+      user?.publicMetadata?.subscription === "premium";
+    const hasPremiumFromPla = user?.pla === "u:premium";
+    const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
 
     if (!hasPremium) {
       return sendForbiddenError(
@@ -27,10 +30,23 @@ const checkPremiumSubscription = async (req, res, next) => {
 const checkNoteLimit = async (req, res, next) => {
   try {
     const user = req.user;
-    const hasPremium = user?.publicMetadata?.subscription === "premium";
+
+    // Check multiple possible fields for subscription status
+    const hasPremiumFromMetadata =
+      user?.publicMetadata?.subscription === "premium";
+    const hasPremiumFromPla = user?.pla === "u:premium";
+    const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
+
+    // Log subscription check for monitoring
+    console.log(
+      `Subscription check for user ${user?.sub}: ${
+        hasPremium ? "premium" : "free"
+      }`
+    );
 
     if (hasPremium) {
       // Premium users have unlimited notes
+      console.log("✅ Premium user - allowing note creation");
       return next();
     }
 

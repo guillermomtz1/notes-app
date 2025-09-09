@@ -84,11 +84,7 @@ async function handleSubscriptionUpdate(subscriptionData) {
   try {
     const { user_id, status, plan } = subscriptionData;
 
-    console.log("Processing subscription update:", {
-      user_id,
-      status,
-      plan: plan?.name,
-    });
+    console.log(`Processing subscription update for user: ${user_id}`);
 
     // Determine subscription type based on status and plan
     let subscriptionType = "free";
@@ -109,7 +105,7 @@ async function handleSubscriptionUpdate(subscriptionData) {
     await updateUserSubscription(user_id, subscriptionType);
 
     console.log(
-      `Subscription update completed for user ${user_id}: ${subscriptionType}`
+      `Subscription updated for user ${user_id}: ${subscriptionType}`
     );
   } catch (error) {
     console.error("Error handling subscription update:", error);
@@ -131,17 +127,20 @@ async function handleSubscriptionDeletion(subscriptionData) {
 // Update user subscription status in Clerk
 async function updateUserSubscription(userId, subscriptionType) {
   try {
+    // Get current user to preserve existing metadata
+    const user = await clerkClient.users.getUser(userId);
+    const currentMetadata = user.publicMetadata || {};
+
     await clerkClient.users.updateUserMetadata(userId, {
       publicMetadata: {
+        ...currentMetadata,
         subscription: subscriptionType,
       },
     });
 
-    console.log(
-      `✅ Successfully updated user ${userId} subscription to: ${subscriptionType}`
-    );
+    console.log(`Updated user ${userId} subscription to: ${subscriptionType}`);
   } catch (error) {
-    console.error("❌ Error updating user subscription:", error);
+    console.error("Error updating user subscription:", error);
     throw error; // Re-throw to allow proper error handling
   }
 }
