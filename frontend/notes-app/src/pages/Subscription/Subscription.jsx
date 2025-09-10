@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { FaCrown, FaCheck, FaArrowLeft } from "react-icons/fa";
 import SubscriptionUpgrade from "../../components/Subscription/SubscriptionUpgrade";
 import SubscriptionCancel from "../../components/Subscription/SubscriptionCancel";
-import SubscriptionDebug from "../../components/Admin/SubscriptionDebug";
 import { API_ENDPOINTS, apiRequest } from "../../utils/api";
 
 const Subscription = () => {
@@ -168,11 +167,6 @@ const Subscription = () => {
             <div className="card">
               <SubscriptionCancel />
             </div>
-
-            {/* Debug Panel - Use to fix subscription status */}
-            <div className="card">
-              <SubscriptionDebug />
-            </div>
           </div>
         ) : (
           /* Free User View */
@@ -264,11 +258,6 @@ const Subscription = () => {
                   ></div>
                 </div>
               </div>
-            </div>
-
-            {/* Debug Panel - Use to fix subscription status */}
-            <div className="card">
-              <SubscriptionDebug />
             </div>
           </div>
         )}
