@@ -14,7 +14,8 @@ const Subscription = () => {
   const [loading, setLoading] = useState(true);
 
   // Check subscription status (check both fields like backend)
-  const hasPremiumFromMetadata = user?.publicMetadata?.subscription === "premium";
+  const hasPremiumFromMetadata =
+    user?.publicMetadata?.subscription === "premium";
   const hasPremiumFromPla = user?.pla === "u:premium";
   const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
 
