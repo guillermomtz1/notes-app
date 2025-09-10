@@ -33,8 +33,10 @@ const Home = () => {
   });
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-  // Check if user has premium subscription
-  const hasPremium = user?.publicMetadata?.subscription === "premium";
+  // Check if user has premium subscription (check both fields like backend)
+  const hasPremiumFromMetadata = user?.publicMetadata?.subscription === "premium";
+  const hasPremiumFromPla = user?.pla === "u:premium";
+  const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
 
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {

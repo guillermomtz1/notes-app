@@ -13,8 +13,10 @@ const Subscription = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Check subscription status
-  const hasPremium = user?.publicMetadata?.subscription === "premium";
+  // Check subscription status (check both fields like backend)
+  const hasPremiumFromMetadata = user?.publicMetadata?.subscription === "premium";
+  const hasPremiumFromPla = user?.pla === "u:premium";
+  const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
 
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
