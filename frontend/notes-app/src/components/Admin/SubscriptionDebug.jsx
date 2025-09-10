@@ -21,12 +21,15 @@ const SubscriptionDebug = () => {
   const checkSubscriptionStatus = async () => {
     try {
       const token = await getToken();
-      const response = await fetch(`${API_BASE_URL}/api/admin/check-subscription`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/admin/check-subscription`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to check subscription status");
@@ -47,14 +50,17 @@ const SubscriptionDebug = () => {
 
     try {
       const token = await getToken();
-      const response = await fetch(`${API_BASE_URL}/api/admin/update-subscription`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ subscriptionType }),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/admin/update-subscription`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ subscriptionType }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update subscription");
