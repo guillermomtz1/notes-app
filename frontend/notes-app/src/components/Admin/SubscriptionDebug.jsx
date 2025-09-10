@@ -78,8 +78,14 @@ const SubscriptionDebug = () => {
     }
   };
 
-  const currentSubscription = user?.publicMetadata?.subscription || "free";
-  const hasPremium = currentSubscription === "premium";
+  // Check both possible fields for subscription status (same as backend)
+  const hasPremiumFromMetadata =
+    user?.publicMetadata?.subscription === "premium";
+  const hasPremiumFromPla = user?.pla === "u:premium";
+  const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
+  const currentSubscription = hasPremium
+    ? "premium"
+    : user?.publicMetadata?.subscription || "free";
 
   return (
     <div className="space-y-4">
@@ -97,6 +103,13 @@ const SubscriptionDebug = () => {
           </p>
           <p>
             <strong>Has Premium:</strong> {hasPremium ? "Yes" : "No"}
+          </p>
+          <p>
+            <strong>From Metadata:</strong>{" "}
+            {user?.publicMetadata?.subscription || "undefined"}
+          </p>
+          <p>
+            <strong>From PLA:</strong> {user?.pla || "undefined"}
           </p>
           <p>
             <strong>User ID:</strong> {user?.id}
