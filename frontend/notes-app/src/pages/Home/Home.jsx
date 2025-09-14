@@ -34,10 +34,53 @@ const Home = () => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   // Check if user has premium subscription (check both fields like backend)
-  const hasPremiumFromMetadata =
-    user?.publicMetadata?.subscription === "premium";
+  const hasPremiumFromMetadata = (() => {
+    const metadata = user?.publicMetadata;
+    if (metadata?.subscription === "premium") {
+      // Check if subscription has expired
+      if (metadata.subscriptionEndDate) {
+        const endDate = new Date(metadata.subscriptionEndDate);
+        const now = new Date();
+        return now < endDate; // Still within paid period
+      }
+      // If no end date, assume it's still valid (legacy support)
+      return true;
+    }
+    return false;
+  })();
+
   const hasPremiumFromPla = user?.pla === "u:premium";
   const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
+
+  // Debug logging to see what the frontend sees
+  console.log("🔍 Frontend Debug - User object:", user);
+  console.log("🔍 Frontend Debug - publicMetadata:", user?.publicMetadata);
+  console.log("🔍 Frontend Debug - pla:", user?.pla);
+  console.log(
+    "🔍 Frontend Debug - hasPremiumFromMetadata:",
+    hasPremiumFromMetadata
+  );
+  console.log("🔍 Frontend Debug - hasPremiumFromPla:", hasPremiumFromPla);
+  console.log("🔍 Frontend Debug - hasPremium:", hasPremium);
+
+  // Force refresh user data if subscription is free but backend says premium
+  useEffect(() => {
+    const refreshUserData = async () => {
+      if (user && user.publicMetadata?.subscription === 'free') {
+        console.log("🔄 Detected stale user data, refreshing...");
+        try {
+          if (window.Clerk && window.Clerk.user) {
+            await window.Clerk.user.reload();
+            console.log("✅ User data refreshed");
+          }
+        } catch (error) {
+          console.error("❌ Error refreshing user data:", error);
+        }
+      }
+    };
+
+    refreshUserData();
+  }, [user]);
 
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
@@ -164,69 +207,70 @@ const Home = () => {
       />
 
       <div className="container mx-auto px-4 md:px-6 pb-16">
-        {/* Note Counter - Only show for free users */}
-        {!hasPremium && (
-          <div className="mt-8 mb-4">
-            <div className="bg-surface rounded-lg p-4 border border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-text">
-                    Your Notes
-                  </h3>
-                  <p className="text-sm text-text-light">
-                    {notes.length} of 10 (Free Plan) notes used
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="w-32 bg-surface-light rounded-full h-2 mb-2">
-                    <div
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        notes.length >= 10 ? "bg-red-500" : "bg-primary"
-                      }`}
-                      style={{
-                        width: `${Math.min((notes.length / 10) * 100, 100)}%`,
-                      }}
-                    ></div>
+        {/* Note Counter - Show for all users with different content */}
+        <div className="mt-8 mb-4">
+          <div className="bg-surface rounded-lg p-4 border border-border">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-text">Your Notes</h3>
+                <p className="text-sm text-text-light">
+                  {hasPremium
+                    ? `${notes.length} notes (Premium Plan)`
+                    : `${notes.length} of 10 (Free Plan) notes used`}
+                </p>
+                {!hasPremium && (
+                  <button
+                    onClick={async () => {
+                      console.log("🔄 Manually refreshing user data...");
+                      try {
+                        if (window.Clerk && window.Clerk.user) {
+                          await window.Clerk.user.reload();
+                          console.log("✅ User data refreshed");
+                          window.location.reload();
+                        }
+                      } catch (error) {
+                        console.error("❌ Error refreshing user data:", error);
+                      }
+                    }}
+                    className="text-xs text-blue-500 hover:text-blue-700 underline mt-1"
+                  >
+                    Refresh subscription status
+                  </button>
+                )}
+                {hasPremium && (
+                  <div className="flex items-center space-x-2 mt-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs text-green-600 font-medium">
+                      Unlimited Access
+                    </span>
                   </div>
-                  {!hasPremium && (
+                )}
+              </div>
+              <div className="text-right">
+                {!hasPremium && (
+                  <>
+                    <div className="w-32 bg-surface-light rounded-full h-2 mb-2">
+                      <div
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          notes.length >= 10 ? "bg-red-500" : "bg-primary"
+                        }`}
+                        style={{
+                          width: `${Math.min((notes.length / 10) * 100, 100)}%`,
+                        }}
+                      ></div>
+                    </div>
                     <button
                       onClick={() => navigate("/subscription")}
                       className="text-sm text-primary hover:text-primary-dark font-medium cursor-pointer bg-transparent border border-primary px-3 py-1 rounded-md hover:bg-primary hover:text-white transition-all duration-200"
                     >
                       Upgrade
                     </button>
-                  )}
-                </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
-        )}
-
-        {/* Premium User Note Count - Simple display */}
-        {hasPremium && (
-          <div className="mt-8 mb-4">
-            <div className="bg-surface rounded-lg p-4 border border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-text">
-                    Your Notes
-                  </h3>
-                  <p className="text-sm text-text-light">
-                    {notes.length} notes • Premium Plan
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-sm text-green-600 font-medium">
-                      Unlimited
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
 
         {/* Grid set-up */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
