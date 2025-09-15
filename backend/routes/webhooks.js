@@ -82,30 +82,59 @@ router.post(
 // Handle subscription creation/update
 async function handleSubscriptionUpdate(subscriptionData) {
   try {
-    const { user_id, status, plan } = subscriptionData;
+    const { user_id, status, plan, current_period_end } = subscriptionData;
 
     console.log(`Processing subscription update for user: ${user_id}`);
+    console.log(`Subscription data:`, subscriptionData);
 
-    // Determine subscription type based on status and plan
-    let subscriptionType = "free";
+    // Determine subscription type and create appropriate data
+    let subscriptionDataObject;
 
     if (status === "active" && plan?.name === "Premium") {
-      subscriptionType = "premium";
+      // New or renewed premium subscription
+      subscriptionDataObject = createSubscriptionData("premium");
     } else if (status === "active" && plan?.name === "Free") {
-      subscriptionType = "free";
-    } else if (
-      status === "canceled" ||
-      status === "incomplete" ||
-      status === "past_due"
-    ) {
-      subscriptionType = "free";
+      // Free subscription
+      subscriptionDataObject = createSubscriptionData("free");
+    } else if (status === "canceled") {
+      // Subscription canceled - keep premium until the actual end date
+      const user = await clerkClient.users.getUser(user_id);
+      const currentMetadata = user.publicMetadata || {};
+
+      // Use the actual subscription end date from the webhook data
+      const actualEndDate = current_period_end
+        ? new Date(current_period_end * 1000).toISOString() // Convert from Unix timestamp
+        : currentMetadata.subscriptionEndDate;
+
+      if (currentMetadata.subscription === "premium") {
+        // Keep premium status but mark as canceled
+        subscriptionDataObject = {
+          ...currentMetadata,
+          isCanceled: true,
+          subscriptionEndDate: actualEndDate,
+        };
+      } else {
+        // If user doesn't have premium metadata but subscription was cancelled,
+        // they likely had premium access - set it up properly
+        subscriptionDataObject = createSubscriptionData("premium", {
+          isCanceled: true,
+          endDate: actualEndDate,
+        });
+      }
+    } else if (status === "incomplete" || status === "past_due") {
+      // Payment failed - downgrade to free
+      subscriptionDataObject = createSubscriptionData("free");
+    } else {
+      // Default to free
+      subscriptionDataObject = createSubscriptionData("free");
     }
 
     // Update user subscription status
-    await updateUserSubscription(user_id, subscriptionType);
+    await updateUserSubscription(user_id, subscriptionDataObject);
 
     console.log(
-      `Subscription updated for user ${user_id}: ${subscriptionType}`
+      `Subscription updated for user ${user_id}:`,
+      subscriptionDataObject
     );
   } catch (error) {
     console.error("Error handling subscription update:", error);
@@ -125,24 +154,65 @@ async function handleSubscriptionDeletion(subscriptionData) {
 }
 
 // Update user subscription status in Clerk
-async function updateUserSubscription(userId, subscriptionType) {
+async function updateUserSubscription(userId, subscriptionData) {
   try {
     // Get current user to preserve existing metadata
     const user = await clerkClient.users.getUser(userId);
     const currentMetadata = user.publicMetadata || {};
 
-    await clerkClient.users.updateUserMetadata(userId, {
-      publicMetadata: {
+    // Handle both old format (string) and new format (object)
+    let newMetadata;
+    if (typeof subscriptionData === "string") {
+      // Legacy format: just subscription type
+      newMetadata = {
         ...currentMetadata,
-        subscription: subscriptionType,
-      },
+        subscription: subscriptionData,
+      };
+    } else {
+      // New format: full subscription object
+      newMetadata = {
+        ...currentMetadata,
+        ...subscriptionData,
+      };
+    }
+
+    await clerkClient.users.updateUserMetadata(userId, {
+      publicMetadata: newMetadata,
     });
 
-    console.log(`Updated user ${userId} subscription to: ${subscriptionType}`);
+    console.log(`Updated user ${userId} subscription:`, newMetadata);
   } catch (error) {
     console.error("Error updating user subscription:", error);
     throw error; // Re-throw to allow proper error handling
   }
 }
+
+// Helper function to calculate subscription end date
+const calculateSubscriptionEndDate = (startDate, durationMonths = 1) => {
+  const endDate = new Date(startDate);
+  endDate.setMonth(endDate.getMonth() + durationMonths);
+  return endDate.toISOString();
+};
+
+// Helper function to create subscription data object
+const createSubscriptionData = (subscriptionType, options = {}) => {
+  const now = new Date().toISOString();
+
+  if (subscriptionType === "premium") {
+    return {
+      subscription: "premium",
+      subscriptionStartDate: options.startDate || now,
+      subscriptionEndDate: options.endDate || calculateSubscriptionEndDate(now),
+      isCanceled: options.isCanceled || false,
+    };
+  } else {
+    return {
+      subscription: "free",
+      subscriptionStartDate: null,
+      subscriptionEndDate: null,
+      isCanceled: false,
+    };
+  }
+};
 
 module.exports = router;

@@ -13,10 +13,40 @@ const Subscription = () => {
   const [loading, setLoading] = useState(true);
 
   // Check subscription status (check both fields like backend)
-  const hasPremiumFromMetadata =
-    user?.publicMetadata?.subscription === "premium";
+  const hasPremiumFromMetadata = (() => {
+    const metadata = user?.publicMetadata;
+    if (metadata?.subscription === "premium") {
+      // Check if subscription has expired
+      if (metadata.subscriptionEndDate) {
+        const endDate = new Date(metadata.subscriptionEndDate);
+        const now = new Date();
+        return now < endDate; // Still within paid period
+      }
+      // If no end date, assume it's still valid (legacy support)
+      return true;
+    }
+    return false;
+  })();
+
   const hasPremiumFromPla = user?.pla === "u:premium";
   const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
+
+  // Get subscription details for display
+  const subscriptionDetails = user?.publicMetadata || {};
+  const isCanceled = subscriptionDetails.isCanceled || false;
+  const subscriptionEndDate = subscriptionDetails.subscriptionEndDate;
+
+  // Format subscription status for display
+  const getSubscriptionStatus = () => {
+    if (hasPremium && !isCanceled) {
+      return "Premium Active";
+    } else if (hasPremium && isCanceled && subscriptionEndDate) {
+      const endDate = new Date(subscriptionEndDate);
+      return `Premium (expires ${endDate.toLocaleDateString()})`;
+    } else {
+      return "Free";
+    }
+  };
 
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
@@ -77,15 +107,23 @@ const Subscription = () => {
             <div className="flex items-center space-x-2">
               <FaCrown
                 className={`text-xl ${
-                  hasPremium ? "text-green-500" : "text-text-muted"
+                  hasPremium
+                    ? isCanceled
+                      ? "text-orange-500"
+                      : "text-green-500"
+                    : "text-text-muted"
                 }`}
               />
               <span
                 className={`font-medium ${
-                  hasPremium ? "text-green-500" : "text-text-muted"
+                  hasPremium
+                    ? isCanceled
+                      ? "text-orange-500"
+                      : "text-green-500"
+                    : "text-text-muted"
                 }`}
               >
-                {hasPremium ? "Premium" : "Free"}
+                {getSubscriptionStatus()}
               </span>
             </div>
           </div>
@@ -99,15 +137,31 @@ const Subscription = () => {
           <div className="space-y-8">
             <div className="card">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
+                <div
+                  className={`w-16 h-16 ${
+                    isCanceled ? "bg-orange-500" : "bg-green-500"
+                  } rounded-full flex items-center justify-center`}
+                >
                   <FaCrown className="text-white text-2xl" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-text">
-                    Premium Plan Active
+                    {isCanceled
+                      ? "Premium Plan (Canceled)"
+                      : "Premium Plan Active"}
                   </h2>
                   <p className="text-text-light">
-                    You're enjoying all premium features
+                    {isCanceled && subscriptionEndDate ? (
+                      <>
+                        Your subscription is canceled but you still have access
+                        until{" "}
+                        <span className="font-medium">
+                          {new Date(subscriptionEndDate).toLocaleDateString()}
+                        </span>
+                      </>
+                    ) : (
+                      "You're enjoying all premium features"
+                    )}
                   </p>
                 </div>
               </div>

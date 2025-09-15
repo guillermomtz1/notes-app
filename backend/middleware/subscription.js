@@ -1,16 +1,34 @@
 const { sendForbiddenError } = require("../utils/response");
 const { MESSAGES } = require("../constants");
 
+// Helper function to check if user has premium subscription
+const hasPremiumSubscription = (user) => {
+  const metadata = user?.publicMetadata;
+
+  // Check PLA field (legacy support)
+  const hasPremiumFromPla = user?.pla === "u:premium";
+
+  // Check metadata subscription status
+  if (metadata?.subscription === "premium") {
+    // Check if subscription has expired
+    if (metadata.subscriptionEndDate) {
+      const endDate = new Date(metadata.subscriptionEndDate);
+      const now = new Date();
+      return now < endDate; // Still within paid period
+    }
+    // If no end date, assume it's still valid (legacy support)
+    return true;
+  }
+
+  // Fallback to PLA check
+  return hasPremiumFromPla;
+};
+
 // Check if user has premium subscription
 const checkPremiumSubscription = async (req, res, next) => {
   try {
     const user = req.user;
-
-    // Check multiple possible fields for subscription status
-    const hasPremiumFromMetadata =
-      user?.publicMetadata?.subscription === "premium";
-    const hasPremiumFromPla = user?.pla === "u:premium";
-    const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
+    const hasPremium = hasPremiumSubscription(user);
 
     if (!hasPremium) {
       return sendForbiddenError(
@@ -30,12 +48,7 @@ const checkPremiumSubscription = async (req, res, next) => {
 const checkNoteLimit = async (req, res, next) => {
   try {
     const user = req.user;
-
-    // Check multiple possible fields for subscription status
-    const hasPremiumFromMetadata =
-      user?.publicMetadata?.subscription === "premium";
-    const hasPremiumFromPla = user?.pla === "u:premium";
-    const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
+    const hasPremium = hasPremiumSubscription(user);
 
     // Log subscription check for monitoring
     console.log(

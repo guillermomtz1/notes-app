@@ -52,6 +52,11 @@ const Home = () => {
   const hasPremiumFromPla = user?.pla === "u:premium";
   const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
 
+  // Get subscription details for display
+  const subscriptionDetails = user?.publicMetadata || {};
+  const isCanceled = subscriptionDetails.isCanceled || false;
+  const subscriptionEndDate = subscriptionDetails.subscriptionEndDate;
+
   // Debug logging to see what the frontend sees
   console.log("🔍 Frontend Debug - User object:", user);
   console.log("🔍 Frontend Debug - publicMetadata:", user?.publicMetadata);
@@ -62,11 +67,13 @@ const Home = () => {
   );
   console.log("🔍 Frontend Debug - hasPremiumFromPla:", hasPremiumFromPla);
   console.log("🔍 Frontend Debug - hasPremium:", hasPremium);
+  console.log("🔍 Frontend Debug - isCanceled:", isCanceled);
+  console.log("🔍 Frontend Debug - subscriptionEndDate:", subscriptionEndDate);
 
   // Force refresh user data if subscription is free but backend says premium
   useEffect(() => {
     const refreshUserData = async () => {
-      if (user && user.publicMetadata?.subscription === 'free') {
+      if (user && user.publicMetadata?.subscription === "free") {
         console.log("🔄 Detected stale user data, refreshing...");
         try {
           if (window.Clerk && window.Clerk.user) {
@@ -215,39 +222,36 @@ const Home = () => {
                 <h3 className="text-lg font-semibold text-text">Your Notes</h3>
                 <p className="text-sm text-text-light">
                   {hasPremium
-                    ? `${notes.length} notes (Premium Plan)`
+                    ? isCanceled && subscriptionEndDate
+                      ? `${
+                          notes.length
+                        } notes (Premium Plan - expires ${new Date(
+                          subscriptionEndDate
+                        ).toLocaleDateString()})`
+                      : `${notes.length} notes (Premium Plan)`
                     : `${notes.length} of 10 (Free Plan) notes used`}
                 </p>
-                {!hasPremium && (
-                  <button
-                    onClick={async () => {
-                      console.log("🔄 Manually refreshing user data...");
-                      try {
-                        if (window.Clerk && window.Clerk.user) {
-                          await window.Clerk.user.reload();
-                          console.log("✅ User data refreshed");
-                          window.location.reload();
-                        }
-                      } catch (error) {
-                        console.error("❌ Error refreshing user data:", error);
-                      }
-                    }}
-                    className="text-xs text-blue-500 hover:text-blue-700 underline mt-1"
-                  >
-                    Refresh subscription status
-                  </button>
-                )}
                 {hasPremium && (
                   <div className="flex items-center space-x-2 mt-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-xs text-green-600 font-medium">
-                      Unlimited Access
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        isCanceled ? "bg-orange-500" : "bg-green-500"
+                      }`}
+                    ></div>
+                    <span
+                      className={`text-xs font-medium ${
+                        isCanceled ? "text-orange-600" : "text-green-600"
+                      }`}
+                    >
+                      {isCanceled
+                        ? "Premium Access (Cancelled)"
+                        : "Unlimited Access"}
                     </span>
                   </div>
                 )}
               </div>
               <div className="text-right">
-                {!hasPremium && (
+                {!hasPremium && user && (
                   <>
                     <div className="w-32 bg-surface-light rounded-full h-2 mb-2">
                       <div

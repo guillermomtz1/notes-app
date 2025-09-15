@@ -8,10 +8,28 @@ const SubscriptionPricing = () => {
   const { user } = useUser();
 
   // Check if user has premium subscription (check both fields like backend)
-  const hasPremiumFromMetadata =
-    user?.publicMetadata?.subscription === "premium";
+  const hasPremiumFromMetadata = (() => {
+    const metadata = user?.publicMetadata;
+    if (metadata?.subscription === "premium") {
+      // Check if subscription has expired
+      if (metadata.subscriptionEndDate) {
+        const endDate = new Date(metadata.subscriptionEndDate);
+        const now = new Date();
+        return now < endDate; // Still within paid period
+      }
+      // If no end date, assume it's still valid (legacy support)
+      return true;
+    }
+    return false;
+  })();
+
   const hasPremiumFromPla = user?.pla === "u:premium";
   const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
+
+  // Get subscription details for display
+  const subscriptionDetails = user?.publicMetadata || {};
+  const isCanceled = subscriptionDetails.isCanceled || false;
+  const subscriptionEndDate = subscriptionDetails.subscriptionEndDate;
 
   const handleUpgrade = () => {
     if (!isSignedIn) {
@@ -104,18 +122,30 @@ const SubscriptionPricing = () => {
           {/* Premium Plan */}
           <div
             className={`card relative border-2 ${
-              hasPremium ? "border-green-500" : "border-primary"
+              hasPremium
+                ? isCanceled
+                  ? "border-orange-500"
+                  : "border-green-500"
+                : "border-primary"
             }`}
           >
             {/* Popular Badge */}
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <div
                 className={`${
-                  hasPremium ? "bg-green-500" : "bg-primary"
+                  hasPremium
+                    ? isCanceled
+                      ? "bg-orange-500"
+                      : "bg-green-500"
+                    : "bg-primary"
                 } text-white px-4 py-2 rounded-full text-sm font-medium flex items-center`}
               >
                 <FaStar className="mr-1" />
-                {hasPremium ? "Active Plan" : "Most Popular"}
+                {hasPremium
+                  ? isCanceled
+                    ? "Cancelled Plan"
+                    : "Active Plan"
+                  : "Most Popular"}
               </div>
             </div>
 
@@ -123,7 +153,11 @@ const SubscriptionPricing = () => {
               <div className="flex items-center justify-center mb-2">
                 <FaCrown
                   className={`${
-                    hasPremium ? "text-green-500" : "text-primary"
+                    hasPremium
+                      ? isCanceled
+                        ? "text-orange-500"
+                        : "text-green-500"
+                      : "text-primary"
                   } mr-2`}
                 />
                 <h3 className="text-2xl font-bold text-text">Premium</h3>
@@ -131,7 +165,11 @@ const SubscriptionPricing = () => {
               <div className="mb-6">
                 <span
                   className={`text-4xl font-bold ${
-                    hasPremium ? "text-green-500" : "text-primary"
+                    hasPremium
+                      ? isCanceled
+                        ? "text-orange-500"
+                        : "text-green-500"
+                      : "text-primary"
                   }`}
                 >
                   $1.99
@@ -179,8 +217,16 @@ const SubscriptionPricing = () => {
 
             {/* CTA Button */}
             {hasPremium ? (
-              <div className="w-full bg-green-500 text-white text-center block py-3 rounded-lg font-medium">
-                ✓ Premium Active
+              <div
+                className={`w-full text-white text-center block py-3 rounded-lg font-medium ${
+                  isCanceled ? "bg-orange-500" : "bg-green-500"
+                }`}
+              >
+                {isCanceled
+                  ? `✓ Premium (expires ${new Date(
+                      subscriptionEndDate
+                    ).toLocaleDateString()})`
+                  : "✓ Premium Active"}
               </div>
             ) : (
               <button
