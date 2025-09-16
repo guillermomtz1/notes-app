@@ -324,6 +324,28 @@ const Subscription = () => {
             <div className="card">
               <SubscriptionCancel />
             </div>
+
+            {/* Temporary Debug Info - Remove after fixing */}
+            <div className="card bg-red-50 border-red-200">
+              <h3 className="text-lg font-semibold text-red-800 mb-4">
+                🔍 Production Debug Info
+              </h3>
+              <div className="space-y-2 text-sm">
+                <p><strong>User ID:</strong> {user?.id}</p>
+                <p><strong>Subscription (metadata):</strong> {user?.publicMetadata?.subscription || 'undefined'}</p>
+                <p><strong>Is Canceled:</strong> {user?.publicMetadata?.isCanceled ? 'true' : 'false'}</p>
+                <p><strong>End Date:</strong> {user?.publicMetadata?.subscriptionEndDate || 'undefined'}</p>
+                <p><strong>PLA:</strong> {user?.pla || 'undefined'}</p>
+                <p><strong>Has Premium (metadata):</strong> {hasPremiumFromMetadata ? 'true' : 'false'}</p>
+                <p><strong>Has Premium (PLA):</strong> {hasPremiumFromPla ? 'true' : 'false'}</p>
+                <p><strong>Final Has Premium:</strong> {hasPremium ? 'true' : 'false'}</p>
+                <p><strong>Is Canceled (final):</strong> {isCanceled ? 'true' : 'false'}</p>
+                <p><strong>Full Metadata:</strong></p>
+                <pre className="text-xs bg-white p-2 rounded border overflow-auto">
+                  {JSON.stringify(user?.publicMetadata, null, 2)}
+                </pre>
+              </div>
+            </div>
           </div>
         ) : (
           /* Free User View */
@@ -414,6 +436,28 @@ const Subscription = () => {
                     }}
                   ></div>
                 </div>
+              </div>
+            </div>
+
+            {/* Temporary Debug Info for Free Users - Remove after fixing */}
+            <div className="card bg-yellow-50 border-yellow-200">
+              <h3 className="text-lg font-semibold text-yellow-800 mb-4">
+                🔍 Free User Debug Info
+              </h3>
+              <div className="space-y-2 text-sm">
+                <p><strong>User ID:</strong> {user?.id}</p>
+                <p><strong>Subscription (metadata):</strong> {user?.publicMetadata?.subscription || 'undefined'}</p>
+                <p><strong>Is Canceled:</strong> {user?.publicMetadata?.isCanceled ? 'true' : 'false'}</p>
+                <p><strong>End Date:</strong> {user?.publicMetadata?.subscriptionEndDate || 'undefined'}</p>
+                <p><strong>PLA:</strong> {user?.pla || 'undefined'}</p>
+                <p><strong>Has Premium (metadata):</strong> {hasPremiumFromMetadata ? 'true' : 'false'}</p>
+                <p><strong>Has Premium (PLA):</strong> {hasPremiumFromPla ? 'true' : 'false'}</p>
+                <p><strong>Final Has Premium:</strong> {hasPremium ? 'true' : 'false'}</p>
+                <p><strong>Is Canceled (final):</strong> {isCanceled ? 'true' : 'false'}</p>
+                <p><strong>Full Metadata:</strong></p>
+                <pre className="text-xs bg-white p-2 rounded border overflow-auto">
+                  {JSON.stringify(user?.publicMetadata, null, 2)}
+                </pre>
               </div>
             </div>
           </div>
