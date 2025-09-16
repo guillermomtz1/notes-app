@@ -58,7 +58,7 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-7xl font-bold text-text mb-6">
-              🛠️ Built for developers, by developers.
+              🚀 Track your wins, ace your reviews
             </h1>
             <p className="text-xl text-text-light mb-8 leading-relaxed">
               We get it. You squash bugs all day, refactor ancient code, and
@@ -67,12 +67,12 @@ const Landing = () => {
               <em>you go</em>, without the fluff.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={handleSignUp}
-                className="gradient-bg px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white"
+              <Link
+                to="/signup"
+                className="gradient-bg px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white cursor-pointer inline-block"
               >
                 Start Writing Today
-              </button>
+              </Link>
               <Link
                 to="/login"
                 className="btn-secondary px-8 py-4 text-lg font-semibold whitespace-nowrap text-center hover:text-white"
@@ -99,7 +99,7 @@ const Landing = () => {
           <div className="relative">
             <div className="absolute -inset-2 md:-inset-3 rounded-3xl green-accent-border blur-md opacity-20 pointer-events-none" />
             <figure
-              className="bg-surface border border-border rounded-2xl overflow-hidden"
+              className="bg-surface border border-border rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer"
               style={{
                 boxShadow:
                   "0 28px 80px rgba(17, 24, 39, 0.22), 0 12px 24px rgba(17, 24, 39, 0.10)",
@@ -108,7 +108,7 @@ const Landing = () => {
               <img
                 src={landingScreenshot}
                 alt="Braggy example of note cards"
-                className="w-full h-auto object-cover drop-shadow-2xl"
+                className="w-full h-auto object-cover drop-shadow-3xl"
                 loading="lazy"
               />
               <figcaption className="px-4 md:px-6 py-4 border-t border-border bg-surface-light/60 text-center text-text-light">

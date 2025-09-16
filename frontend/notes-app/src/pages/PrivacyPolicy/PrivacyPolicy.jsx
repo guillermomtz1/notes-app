@@ -174,11 +174,7 @@ const PrivacyPolicy = () => {
               </div>
             </section>
 
-            <div className="border-t border-border pt-8 mt-8">
-              <p className="text-text-muted text-sm">
-                <strong>Last Updated:</strong> {new Date().toLocaleDateString()}
-              </p>
-            </div>
+            <div className="border-t border-border pt-8 mt-8"></div>
           </div>
         </div>
       </div>
