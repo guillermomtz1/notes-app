@@ -83,7 +83,7 @@ const Landing = () => {
                 className="bg-primary text-white px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 cursor-pointer hover:bg-primary-dark"
                 style={{ pointerEvents: "auto" }}
               >
-                Start Writing Today - UPDATED
+                Start Writing Today
               </button>
               <Link
                 to="/login"

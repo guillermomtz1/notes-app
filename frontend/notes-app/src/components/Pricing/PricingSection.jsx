@@ -1,15 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaCheck, FaCrown, FaStar } from "react-icons/fa";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useClerk } from "@clerk/clerk-react";
 
 const PricingSection = () => {
   const { user } = useAuth();
+  const { openSignUp } = useClerk();
 
   const handleSubscribe = async (planId) => {
     if (!user) {
-      // Redirect to sign up if not logged in
-      window.location.href = "/signup";
+      // Open Clerk's signup modal if not logged in
+      openSignUp();
       return;
     }
 
