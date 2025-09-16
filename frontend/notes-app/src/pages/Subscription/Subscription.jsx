@@ -528,7 +528,7 @@ const Subscription = () => {
                       try {
                         const token = await getToken();
                         const response = await fetch(
-                          "/api/admin/update-subscription",
+                          API_ENDPOINTS.ADMIN.UPDATE_SUBSCRIPTION,
                           {
                             method: "POST",
                             headers: {
