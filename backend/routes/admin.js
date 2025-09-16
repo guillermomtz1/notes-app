@@ -56,19 +56,44 @@ router.post("/update-subscription", authenticateUser, async (req, res) => {
     const user = await clerkClient.users.getUser(userId);
     const currentMetadata = user.publicMetadata || {};
 
+    // Create subscription data based on type
+    let subscriptionData;
+    const now = new Date().toISOString();
+
+    if (subscriptionType === "premium") {
+      // Calculate end date (30 days from now for monthly subscription)
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 30);
+
+      subscriptionData = {
+        ...currentMetadata,
+        subscription: "premium",
+        subscriptionStartDate: now,
+        subscriptionEndDate: endDate.toISOString(),
+        isCanceled: false,
+      };
+    } else {
+      subscriptionData = {
+        ...currentMetadata,
+        subscription: "free",
+        subscriptionStartDate: null,
+        subscriptionEndDate: null,
+        isCanceled: false,
+      };
+    }
+
     // Update user metadata in Clerk
     await clerkClient.users.updateUserMetadata(userId, {
-      publicMetadata: {
-        ...currentMetadata,
-        subscription: subscriptionType,
-      },
+      publicMetadata: subscriptionData,
     });
 
     console.log(`Updated user ${userId} subscription to: ${subscriptionType}`);
+    console.log(`Subscription data:`, subscriptionData);
 
     sendSuccess(res, 200, `Subscription updated to ${subscriptionType}`, {
       userId,
       subscription: subscriptionType,
+      subscriptionData,
     });
   } catch (error) {
     console.error("Error updating subscription:", error);

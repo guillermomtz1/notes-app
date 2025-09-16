@@ -331,16 +331,43 @@ const Subscription = () => {
                 🔍 Production Debug Info
               </h3>
               <div className="space-y-2 text-sm">
-                <p><strong>User ID:</strong> {user?.id}</p>
-                <p><strong>Subscription (metadata):</strong> {user?.publicMetadata?.subscription || 'undefined'}</p>
-                <p><strong>Is Canceled:</strong> {user?.publicMetadata?.isCanceled ? 'true' : 'false'}</p>
-                <p><strong>End Date:</strong> {user?.publicMetadata?.subscriptionEndDate || 'undefined'}</p>
-                <p><strong>PLA:</strong> {user?.pla || 'undefined'}</p>
-                <p><strong>Has Premium (metadata):</strong> {hasPremiumFromMetadata ? 'true' : 'false'}</p>
-                <p><strong>Has Premium (PLA):</strong> {hasPremiumFromPla ? 'true' : 'false'}</p>
-                <p><strong>Final Has Premium:</strong> {hasPremium ? 'true' : 'false'}</p>
-                <p><strong>Is Canceled (final):</strong> {isCanceled ? 'true' : 'false'}</p>
-                <p><strong>Full Metadata:</strong></p>
+                <p>
+                  <strong>User ID:</strong> {user?.id}
+                </p>
+                <p>
+                  <strong>Subscription (metadata):</strong>{" "}
+                  {user?.publicMetadata?.subscription || "undefined"}
+                </p>
+                <p>
+                  <strong>Is Canceled:</strong>{" "}
+                  {user?.publicMetadata?.isCanceled ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>End Date:</strong>{" "}
+                  {user?.publicMetadata?.subscriptionEndDate || "undefined"}
+                </p>
+                <p>
+                  <strong>PLA:</strong> {user?.pla || "undefined"}
+                </p>
+                <p>
+                  <strong>Has Premium (metadata):</strong>{" "}
+                  {hasPremiumFromMetadata ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>Has Premium (PLA):</strong>{" "}
+                  {hasPremiumFromPla ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>Final Has Premium:</strong>{" "}
+                  {hasPremium ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>Is Canceled (final):</strong>{" "}
+                  {isCanceled ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>Full Metadata:</strong>
+                </p>
                 <pre className="text-xs bg-white p-2 rounded border overflow-auto">
                   {JSON.stringify(user?.publicMetadata, null, 2)}
                 </pre>
@@ -445,19 +472,92 @@ const Subscription = () => {
                 🔍 Free User Debug Info
               </h3>
               <div className="space-y-2 text-sm">
-                <p><strong>User ID:</strong> {user?.id}</p>
-                <p><strong>Subscription (metadata):</strong> {user?.publicMetadata?.subscription || 'undefined'}</p>
-                <p><strong>Is Canceled:</strong> {user?.publicMetadata?.isCanceled ? 'true' : 'false'}</p>
-                <p><strong>End Date:</strong> {user?.publicMetadata?.subscriptionEndDate || 'undefined'}</p>
-                <p><strong>PLA:</strong> {user?.pla || 'undefined'}</p>
-                <p><strong>Has Premium (metadata):</strong> {hasPremiumFromMetadata ? 'true' : 'false'}</p>
-                <p><strong>Has Premium (PLA):</strong> {hasPremiumFromPla ? 'true' : 'false'}</p>
-                <p><strong>Final Has Premium:</strong> {hasPremium ? 'true' : 'false'}</p>
-                <p><strong>Is Canceled (final):</strong> {isCanceled ? 'true' : 'false'}</p>
-                <p><strong>Full Metadata:</strong></p>
+                <p>
+                  <strong>User ID:</strong> {user?.id}
+                </p>
+                <p>
+                  <strong>Subscription (metadata):</strong>{" "}
+                  {user?.publicMetadata?.subscription || "undefined"}
+                </p>
+                <p>
+                  <strong>Is Canceled:</strong>{" "}
+                  {user?.publicMetadata?.isCanceled ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>End Date:</strong>{" "}
+                  {user?.publicMetadata?.subscriptionEndDate || "undefined"}
+                </p>
+                <p>
+                  <strong>PLA:</strong> {user?.pla || "undefined"}
+                </p>
+                <p>
+                  <strong>Has Premium (metadata):</strong>{" "}
+                  {hasPremiumFromMetadata ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>Has Premium (PLA):</strong>{" "}
+                  {hasPremiumFromPla ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>Final Has Premium:</strong>{" "}
+                  {hasPremium ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>Is Canceled (final):</strong>{" "}
+                  {isCanceled ? "true" : "false"}
+                </p>
+                <p>
+                  <strong>Full Metadata:</strong>
+                </p>
                 <pre className="text-xs bg-white p-2 rounded border overflow-auto">
                   {JSON.stringify(user?.publicMetadata, null, 2)}
                 </pre>
+
+                {/* Temporary Fix Button - Remove after fixing */}
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded">
+                  <h4 className="font-semibold text-red-800 mb-2">
+                    🚨 Emergency Fix
+                  </h4>
+                  <p className="text-red-700 text-xs mb-3">
+                    If you paid for premium but are showing as free, click this
+                    button to fix your subscription status.
+                  </p>
+                  <button
+                    className="bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700"
+                    onClick={async () => {
+                      try {
+                        const token = await getToken();
+                        const response = await fetch(
+                          "/api/admin/update-subscription",
+                          {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({
+                              subscriptionType: "premium",
+                            }),
+                          }
+                        );
+
+                        if (response.ok) {
+                          alert(
+                            "✅ Subscription fixed! Please refresh the page."
+                          );
+                          window.location.reload();
+                        } else {
+                          const error = await response.text();
+                          alert(`❌ Error: ${error}`);
+                        }
+                      } catch (error) {
+                        alert(`❌ Error: ${error.message}`);
+                      }
+                    }}
+                  >
+                    Fix My Subscription
+                  </button>
+                </div>
               </div>
             </div>
           </div>
