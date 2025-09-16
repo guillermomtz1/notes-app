@@ -6,9 +6,7 @@ import {
   FaExclamationTriangle,
   FaInfoCircle,
 } from "react-icons/fa";
-
-// API configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+import { API_ENDPOINTS } from "../../utils/api";
 
 const SubscriptionDebug = () => {
   const { getToken } = useAuth();
@@ -21,15 +19,12 @@ const SubscriptionDebug = () => {
   const checkSubscriptionStatus = async () => {
     try {
       const token = await getToken();
-      const response = await fetch(
-        `${API_BASE_URL}/api/admin/check-subscription`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(API_ENDPOINTS.ADMIN.CHECK_SUBSCRIPTION, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to check subscription status");
@@ -50,17 +45,14 @@ const SubscriptionDebug = () => {
 
     try {
       const token = await getToken();
-      const response = await fetch(
-        `${API_BASE_URL}/api/admin/update-subscription`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ subscriptionType }),
-        }
-      );
+      const response = await fetch(API_ENDPOINTS.ADMIN.UPDATE_SUBSCRIPTION, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ subscriptionType }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update subscription");

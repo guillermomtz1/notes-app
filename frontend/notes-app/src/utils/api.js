@@ -1,5 +1,8 @@
 // API configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+// In development, use same-origin requests and rely on Vite proxy to reduce CORS/preflight latency.
+const API_BASE_URL = import.meta.env.DEV
+  ? ""
+  : import.meta.env.VITE_API_URL || "";
 
 // Debug: Log the API URL in development
 if (import.meta.env.DEV) {
@@ -10,6 +13,11 @@ if (import.meta.env.DEV) {
 export const API_ENDPOINTS = {
   NOTES: `${API_BASE_URL}/api/notes`,
   NOTE_BY_ID: (id) => `${API_BASE_URL}/api/notes/${id}`,
+  ADMIN: {
+    CANCEL_SUBSCRIPTION: `${API_BASE_URL}/api/admin/cancel-subscription`,
+    CHECK_SUBSCRIPTION: `${API_BASE_URL}/api/admin/check-subscription`,
+    UPDATE_SUBSCRIPTION: `${API_BASE_URL}/api/admin/update-subscription`,
+  },
 };
 
 export const apiRequest = async (endpoint, options = {}) => {

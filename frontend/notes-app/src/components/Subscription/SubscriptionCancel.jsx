@@ -6,6 +6,7 @@ import {
   FaCheck,
   FaTimes,
 } from "react-icons/fa";
+import { API_ENDPOINTS } from "../../utils/api";
 
 const SubscriptionCancel = () => {
   const { getToken } = useAuth();
@@ -21,7 +22,7 @@ const SubscriptionCancel = () => {
 
     try {
       const token = await getToken();
-      const response = await fetch("/api/admin/cancel-subscription", {
+      const response = await fetch(API_ENDPOINTS.ADMIN.CANCEL_SUBSCRIPTION, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

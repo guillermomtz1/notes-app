@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
@@ -11,6 +11,8 @@ import { FloatingActionButton } from "../../components/FloatingActionButton";
 import { API_ENDPOINTS, apiRequest } from "../../utils/api";
 
 const Home = () => {
+  const isDev = import.meta.env.DEV;
+  const enableVerboseDebug = isDev && import.meta.env.VITE_DEBUG === "true";
   const { getToken } = useAuth();
   const { user } = useUser();
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const Home = () => {
     noteTitle: "",
   });
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const didTryUserRefreshRef = useRef(false);
 
   // Check if user has premium subscription (check both fields like backend)
   const hasPremiumFromMetadata = (() => {
@@ -57,37 +60,46 @@ const Home = () => {
   const isCanceled = subscriptionDetails.isCanceled || false;
   const subscriptionEndDate = subscriptionDetails.subscriptionEndDate;
 
-  // Debug logging to see what the frontend sees
-  console.log("🔍 Frontend Debug - User object:", user);
-  console.log("🔍 Frontend Debug - publicMetadata:", user?.publicMetadata);
-  console.log("🔍 Frontend Debug - pla:", user?.pla);
-  console.log(
-    "🔍 Frontend Debug - hasPremiumFromMetadata:",
-    hasPremiumFromMetadata
-  );
-  console.log("🔍 Frontend Debug - hasPremiumFromPla:", hasPremiumFromPla);
-  console.log("🔍 Frontend Debug - hasPremium:", hasPremium);
-  console.log("🔍 Frontend Debug - isCanceled:", isCanceled);
-  console.log("🔍 Frontend Debug - subscriptionEndDate:", subscriptionEndDate);
+  // Debug logging to see what the frontend sees (opt-in only)
+  if (enableVerboseDebug) {
+    console.log("🔍 Frontend Debug - User object:", user);
+    console.log("🔍 Frontend Debug - publicMetadata:", user?.publicMetadata);
+    console.log("🔍 Frontend Debug - pla:", user?.pla);
+    console.log(
+      "🔍 Frontend Debug - hasPremiumFromMetadata:",
+      hasPremiumFromMetadata
+    );
+    console.log("🔍 Frontend Debug - hasPremiumFromPla:", hasPremiumFromPla);
+    console.log("🔍 Frontend Debug - hasPremium:", hasPremium);
+    console.log("🔍 Frontend Debug - isCanceled:", isCanceled);
+    console.log(
+      "🔍 Frontend Debug - subscriptionEndDate:",
+      subscriptionEndDate
+    );
+  }
 
   // Force refresh user data if subscription is free but backend says premium
   useEffect(() => {
     const refreshUserData = async () => {
+      // Avoid multiple reloads; run at most once per mount
+      if (didTryUserRefreshRef.current) return;
       if (user && user.publicMetadata?.subscription === "free") {
-        console.log("🔄 Detected stale user data, refreshing...");
+        didTryUserRefreshRef.current = true;
+        if (isDev) console.log("🔄 Detected stale user data, refreshing...");
         try {
-          if (window.Clerk && window.Clerk.user) {
+          if (window.Clerk && window.Clerk.user && window.Clerk.user.reload) {
             await window.Clerk.user.reload();
-            console.log("✅ User data refreshed");
+            if (isDev) console.log("✅ User data refreshed");
           }
         } catch (error) {
-          console.error("❌ Error refreshing user data:", error);
+          // Keep silent in prod to avoid noise
+          if (isDev) console.error("❌ Error refreshing user data:", error);
         }
       }
     };
 
     refreshUserData();
-  }, [user]);
+  }, [user, isDev]);
 
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
@@ -109,16 +121,17 @@ const Home = () => {
   // Create new note
   const createNote = async (noteData) => {
     try {
-      console.log("createNote called with:", noteData);
+      if (isDev) console.log("createNote called with:", noteData);
       const token = await getToken();
       const method = noteData.id ? "PUT" : "POST";
       const endpoint = noteData.id
         ? API_ENDPOINTS.NOTE_BY_ID(noteData.id)
         : API_ENDPOINTS.NOTES;
-
-      console.log("Method:", method);
-      console.log("Endpoint:", endpoint);
-      console.log("Token:", token ? "Present" : "Missing");
+      if (isDev) {
+        console.log("Method:", method);
+        console.log("Endpoint:", endpoint);
+        console.log("Token:", token ? "Present" : "Missing");
+      }
 
       const response = await fetch(endpoint, {
         method,
@@ -141,7 +154,7 @@ const Home = () => {
       }
 
       await response.json();
-      console.log("API request successful");
+      if (isDev) console.log("API request successful");
       await fetchNotes(); // Refresh notes
       return true;
     } catch (error) {
