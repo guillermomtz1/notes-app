@@ -100,10 +100,6 @@ const PricingSection = () => {
               </div>
               <div className="flex items-center">
                 <FaCheck className="text-green-500 mr-3 flex-shrink-0" />
-                <span className="text-text">Priority support</span>
-              </div>
-              <div className="flex items-center">
-                <FaCheck className="text-green-500 mr-3 flex-shrink-0" />
                 <span className="text-text">
                   AI Summary{" "}
                   <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full ml-2">
