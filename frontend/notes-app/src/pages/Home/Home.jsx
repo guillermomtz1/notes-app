@@ -127,6 +127,54 @@ const Home = () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [user, isDev]);
 
+  // Auto-refresh user data when window regains focus
+  useEffect(() => {
+    const handleFocus = async () => {
+      if (
+        user &&
+        window.Clerk &&
+        window.Clerk.user &&
+        window.Clerk.user.reload
+      ) {
+        try {
+          await window.Clerk.user.reload();
+          if (isDev) console.log("🔄 User data refreshed on window focus");
+        } catch (error) {
+          if (isDev)
+            console.error(
+              "❌ Error refreshing user data on window focus:",
+              error
+            );
+        }
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [user, isDev]);
+
+  // Periodic refresh of user data (every 3 minutes) to catch any missed updates
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      if (
+        user &&
+        window.Clerk &&
+        window.Clerk.user &&
+        window.Clerk.user.reload
+      ) {
+        try {
+          await window.Clerk.user.reload();
+          if (isDev) console.log("🔄 Periodic user data refresh");
+        } catch (error) {
+          if (isDev)
+            console.error("❌ Error in periodic user data refresh:", error);
+        }
+      }
+    }, 180000); // 3 minutes
+
+    return () => clearInterval(intervalId);
+  }, [user, isDev]);
+
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
     try {

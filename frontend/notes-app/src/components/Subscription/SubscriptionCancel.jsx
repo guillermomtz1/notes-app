@@ -41,16 +41,16 @@ const SubscriptionCancel = () => {
 
       // Force Clerk to refresh user data to get updated metadata
       if (window.Clerk && window.Clerk.user) {
-        console.log("🔄 Refreshing Clerk user data after cancellation...");
         try {
+          // Multiple refresh attempts to ensure we get fresh data
           await window.Clerk.user.reload();
-          console.log("✅ Clerk user data refreshed after cancellation");
           
-          // Debug: Log the updated user data
-          console.log("🔍 Updated user data:", window.Clerk.user);
-          console.log("🔍 Updated publicMetadata:", window.Clerk.user.publicMetadata);
+          // Try to refresh the entire Clerk session
+          if (window.Clerk.load) {
+            await window.Clerk.load();
+          }
         } catch (error) {
-          console.error("❌ Error refreshing user data:", error);
+          console.error("Error refreshing user data:", error);
         }
       }
 
