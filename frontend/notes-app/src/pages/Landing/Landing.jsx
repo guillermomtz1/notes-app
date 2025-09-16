@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useClerk } from "@clerk/clerk-react";
 import {
   FaBookOpen,
   FaPenFancy,
@@ -14,6 +15,12 @@ import { PricingSection } from "../../components/Pricing";
 import SubscriptionPricing from "../../components/Pricing/SubscriptionPricing";
 
 const Landing = () => {
+  const { openSignUp } = useClerk();
+
+  const handleSignUp = () => {
+    openSignUp();
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -35,12 +42,12 @@ const Landing = () => {
               >
                 Login
               </Link>
-              <Link
-                to="/signup"
+              <button
+                onClick={handleSignUp}
                 className="btn-primary px-4 py-3 rounded-lg text-sm font-medium text-center"
               >
                 Sign Up
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -60,12 +67,12 @@ const Landing = () => {
               <em>you go</em>, without the fluff.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/signup"
+              <button
+                onClick={handleSignUp}
                 className="gradient-bg px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white"
               >
                 Start Writing Today
-              </Link>
+              </button>
               <Link
                 to="/login"
                 className="btn-secondary px-8 py-4 text-lg font-semibold whitespace-nowrap text-center hover:text-white"
@@ -154,12 +161,12 @@ const Landing = () => {
             <p className="text-xl text-white/90 mb-8">
               Start organizing your accomplishments today.
             </p>
-            <Link
-              to="/signup"
+            <button
+              onClick={handleSignUp}
               className="bg-white text-primary border-2 border-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105 inline-block hover:bg-primary hover:text-white"
             >
               Create Your Free Account
-            </Link>
+            </button>
           </div>
         </div>
       </div>

@@ -101,6 +101,32 @@ const Home = () => {
     refreshUserData();
   }, [user, isDev]);
 
+  // Additional refresh mechanism for subscription changes
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      // Refresh user data when user returns to the tab (e.g., after cancellation)
+      if (document.visibilityState === "visible" && user) {
+        try {
+          if (window.Clerk && window.Clerk.user && window.Clerk.user.reload) {
+            await window.Clerk.user.reload();
+            if (isDev)
+              console.log("🔄 User data refreshed on visibility change");
+          }
+        } catch (error) {
+          if (isDev)
+            console.error(
+              "❌ Error refreshing user data on visibility change:",
+              error
+            );
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [user, isDev]);
+
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
     try {

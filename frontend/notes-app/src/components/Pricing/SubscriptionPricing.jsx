@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth, useUser, useClerk } from "@clerk/clerk-react";
 import { FaCheck, FaCrown, FaStar } from "react-icons/fa";
 
 const SubscriptionPricing = () => {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const { openSignUp } = useClerk();
 
   // Check if user has premium subscription (check both fields like backend)
   const hasPremiumFromMetadata = (() => {
@@ -33,8 +34,8 @@ const SubscriptionPricing = () => {
 
   const handleUpgrade = () => {
     if (!isSignedIn) {
-      // Redirect to signup if not signed in
-      window.location.href = "/signup";
+      // Open Clerk's sign-up modal
+      openSignUp();
       return;
     }
 
@@ -45,7 +46,8 @@ const SubscriptionPricing = () => {
 
   const handleGetStarted = () => {
     if (!isSignedIn) {
-      window.location.href = "/signup";
+      // Open Clerk's sign-up modal
+      openSignUp();
     } else {
       // User is signed in, redirect to home
       window.location.href = "/";

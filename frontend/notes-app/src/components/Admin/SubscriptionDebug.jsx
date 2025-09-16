@@ -80,12 +80,37 @@ const SubscriptionDebug = () => {
   };
 
   // Check both possible fields for subscription status (same as backend)
-  const hasPremiumFromMetadata =
-    user?.publicMetadata?.subscription === "premium";
+  const hasPremiumFromMetadata = (() => {
+    const metadata = user?.publicMetadata;
+    if (metadata?.subscription === "premium") {
+      // Check if subscription has expired
+      if (metadata.subscriptionEndDate) {
+        const endDate = new Date(metadata.subscriptionEndDate);
+        const now = new Date();
+        return now < endDate; // Still within paid period
+      }
+      // If no end date, assume it's still valid (legacy support)
+      return true;
+    }
+    return false;
+  })();
+
   const hasPremiumFromPla = user?.pla === "u:premium";
   const hasPremium = hasPremiumFromMetadata || hasPremiumFromPla;
+
+  // Get subscription details for display
+  const subscriptionDetails = user?.publicMetadata || {};
+  const isCanceled = subscriptionDetails.isCanceled || false;
+  const subscriptionEndDate = subscriptionDetails.subscriptionEndDate;
+
   const currentSubscription = hasPremium
-    ? "premium"
+    ? isCanceled
+      ? `premium (canceled, expires ${
+          subscriptionEndDate
+            ? new Date(subscriptionEndDate).toLocaleDateString()
+            : "unknown"
+        })`
+      : "premium"
     : user?.publicMetadata?.subscription || "free";
 
   return (
@@ -104,6 +129,15 @@ const SubscriptionDebug = () => {
           </p>
           <p>
             <strong>Has Premium:</strong> {hasPremium ? "Yes" : "No"}
+          </p>
+          <p>
+            <strong>Is Canceled:</strong> {isCanceled ? "Yes" : "No"}
+          </p>
+          <p>
+            <strong>End Date:</strong>{" "}
+            {subscriptionEndDate
+              ? new Date(subscriptionEndDate).toLocaleString()
+              : "Not set"}
           </p>
           <p>
             <strong>From Metadata:</strong>{" "}

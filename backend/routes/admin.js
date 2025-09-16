@@ -20,10 +20,18 @@ router.get("/check-subscription", authenticateUser, async (req, res) => {
 
     console.log(`Checking subscription for user: ${userId}`);
 
+    // Get fresh user data from Clerk
+    const freshUser = await clerkClient.users.getUser(userId);
+    const metadata = freshUser.publicMetadata || {};
+
     sendSuccess(res, 200, "Subscription status retrieved", {
       userId,
-      subscription: user?.publicMetadata?.subscription || "free",
-      hasPremium: user?.publicMetadata?.subscription === "premium",
+      subscription: metadata.subscription || "free",
+      hasPremium: metadata.subscription === "premium",
+      isCanceled: metadata.isCanceled || false,
+      subscriptionEndDate: metadata.subscriptionEndDate || null,
+      pla: freshUser.pla || null,
+      fullMetadata: metadata,
     });
   } catch (error) {
     console.error("Error checking subscription:", error);
@@ -77,19 +85,29 @@ router.post("/cancel-subscription", authenticateUser, async (req, res) => {
     const user = await clerkClient.users.getUser(userId);
     const currentMetadata = user.publicMetadata || {};
 
-    // Update user metadata to free
+    // Calculate end of billing period (30 days from now)
+    const subscriptionEndDate = new Date();
+    subscriptionEndDate.setDate(subscriptionEndDate.getDate() + 30);
+
+    // Mark subscription as canceled but keep premium access until end of period
     await clerkClient.users.updateUserMetadata(userId, {
       publicMetadata: {
         ...currentMetadata,
-        subscription: "free",
+        subscription: "premium", // Keep premium access
+        isCanceled: true, // Mark as canceled
+        subscriptionEndDate: subscriptionEndDate.toISOString(), // Set end date
       },
     });
 
-    console.log(`User ${userId} cancelled subscription`);
+    console.log(
+      `User ${userId} cancelled subscription, access until ${subscriptionEndDate.toISOString()}`
+    );
 
     sendSuccess(res, 200, "Subscription cancelled successfully", {
       userId,
-      subscription: "free",
+      subscription: "premium",
+      isCanceled: true,
+      subscriptionEndDate: subscriptionEndDate.toISOString(),
     });
   } catch (error) {
     console.error("Error cancelling subscription:", error);

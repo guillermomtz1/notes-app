@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 import {
   FaSpinner,
   FaExclamationTriangle,
@@ -10,6 +11,7 @@ import { API_ENDPOINTS } from "../../utils/api";
 
 const SubscriptionCancel = () => {
   const { getToken } = useAuth();
+  const navigate = useNavigate();
   const [isCancelling, setIsCancelling] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [cancelError, setCancelError] = useState(null);
@@ -37,9 +39,20 @@ const SubscriptionCancel = () => {
       setCancelSuccess(true);
       setShowConfirmModal(false);
 
-      // Refresh the page after 2 seconds to update the UI
+      // Force Clerk to refresh user data to get updated metadata
+      if (window.Clerk && window.Clerk.user) {
+        console.log("🔄 Refreshing Clerk user data after cancellation...");
+        try {
+          await window.Clerk.user.reload();
+          console.log("✅ Clerk user data refreshed after cancellation");
+        } catch (error) {
+          console.error("❌ Error refreshing user data:", error);
+        }
+      }
+
+      // Redirect to subscription page after 2 seconds to show the updated status
       setTimeout(() => {
-        window.location.reload();
+        navigate("/subscription");
       }, 2000);
     } catch (error) {
       console.error("Cancel error:", error);
@@ -51,14 +64,15 @@ const SubscriptionCancel = () => {
 
   if (cancelSuccess) {
     return (
-      <div className="text-center p-6 bg-green-50 border border-green-200 rounded-lg">
-        <FaCheck className="text-green-500 text-3xl mx-auto mb-3" />
-        <h3 className="text-lg font-semibold text-green-800 mb-2">
+      <div className="text-center p-6 bg-orange-50 border border-orange-200 rounded-lg">
+        <FaCheck className="text-orange-500 text-3xl mx-auto mb-3" />
+        <h3 className="text-lg font-semibold text-orange-800 mb-2">
           Subscription Cancelled
         </h3>
-        <p className="text-green-600 text-sm">
-          Your subscription has been cancelled successfully. You'll be reverted
-          to the free plan. The page will refresh automatically.
+        <p className="text-orange-600 text-sm">
+          Your subscription has been cancelled successfully. You still have
+          premium access until the end of your billing period. Redirecting to
+          subscription page...
         </p>
       </div>
     );
@@ -81,8 +95,9 @@ const SubscriptionCancel = () => {
           Cancel Subscription
         </h3>
         <p className="text-red-700 text-sm mb-4">
-          If you cancel your subscription, you'll be reverted to the free plan
-          with a 10-note limit. You can always upgrade again later.
+          If you cancel your subscription, you'll keep premium access until the
+          end of your billing period (30 days), then be reverted to the free
+          plan with a 10-note limit. You can always upgrade again later.
         </p>
 
         <button
@@ -115,8 +130,8 @@ const SubscriptionCancel = () => {
               </h2>
               <p className="text-gray-600 mb-6">
                 Are you sure you want to cancel your premium subscription?
-                You'll lose access to unlimited notes and be reverted to the
-                free plan (10 notes limit).
+                You'll keep premium access until the end of your billing period
+                (30 days), then be reverted to the free plan (10 notes limit).
               </p>
 
               <div className="flex gap-3">
