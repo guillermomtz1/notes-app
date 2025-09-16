@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useClerk } from "@clerk/clerk-react";
+import { useClerk, SignUpButton } from "@clerk/clerk-react";
 import {
   FaBookOpen,
   FaPenFancy,
@@ -67,12 +67,11 @@ const Landing = () => {
               <em>you go</em>, without the fluff.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={handleSignUp}
-                className="btn-primary px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white cursor-pointer"
-              >
-                Start Writing Today
-              </button>
+              <SignUpButton mode="modal">
+                <button className="btn-primary px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white cursor-pointer">
+                  Start Writing Today
+                </button>
+              </SignUpButton>
               <Link
                 to="/login"
                 className="btn-secondary px-8 py-4 text-lg font-semibold whitespace-nowrap text-center hover:text-white"
