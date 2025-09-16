@@ -318,7 +318,6 @@ const Subscription = () => {
                 Manage Billing
               </button>
             </div>
-
           </div>
         ) : (
           /* Free User View */
