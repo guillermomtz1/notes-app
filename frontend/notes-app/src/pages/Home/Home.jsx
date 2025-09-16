@@ -90,10 +90,24 @@ const Home = () => {
           if (window.Clerk && window.Clerk.user && window.Clerk.user.reload) {
             await window.Clerk.user.reload();
             if (isDev) console.log("✅ User data refreshed");
+
+            // Force page reload if user data still seems stale after refresh
+            setTimeout(() => {
+              if (!user?.publicMetadata?.subscription && !user?.pla) {
+                console.log(
+                  "User data still stale after refresh, forcing page reload..."
+                );
+                window.location.reload();
+              }
+            }, 2000);
           }
         } catch (error) {
           // Keep silent in prod to avoid noise
           if (isDev) console.error("❌ Error refreshing user data:", error);
+          // Force page reload on error
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
       }
     };

@@ -82,15 +82,42 @@ const Subscription = () => {
       if (user && window.Clerk && window.Clerk.user) {
         try {
           await window.Clerk.user.reload();
+
+          // Force a page reload if user data seems stale (no subscription metadata)
+          setTimeout(() => {
+            if (!user?.publicMetadata?.subscription && !user?.pla) {
+              console.log("User data appears stale, forcing page reload...");
+              window.location.reload();
+            }
+          }, 2000);
         } catch (error) {
           console.error("Error auto-refreshing user data:", error);
+          // Force page reload on error
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
       }
     };
 
-    // Small delay to ensure Clerk is fully loaded
-    const timer = setTimeout(autoRefreshUserData, 1000);
-    return () => clearTimeout(timer);
+    // Check if this is a refresh from cancellation
+    const urlParams = new URLSearchParams(window.location.search);
+    const isRefresh = urlParams.get("refresh");
+
+    if (isRefresh) {
+      // This is a refresh from cancellation, force immediate reload
+      console.log(
+        "Detected refresh from cancellation, forcing user data reload..."
+      );
+      autoRefreshUserData();
+
+      // Clean up the URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      // Normal load, use small delay
+      const timer = setTimeout(autoRefreshUserData, 1000);
+      return () => clearTimeout(timer);
+    }
   }, [user]);
 
   // Auto-refresh user data when page becomes visible (e.g., after returning from another tab)

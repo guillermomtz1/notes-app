@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
 import {
   FaSpinner,
   FaExclamationTriangle,
@@ -11,7 +10,6 @@ import { API_ENDPOINTS } from "../../utils/api";
 
 const SubscriptionCancel = () => {
   const { getToken } = useAuth();
-  const navigate = useNavigate();
   const [isCancelling, setIsCancelling] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [cancelError, setCancelError] = useState(null);
@@ -54,9 +52,11 @@ const SubscriptionCancel = () => {
         }
       }
 
-      // Redirect to subscription page after 2 seconds to show the updated status
+      // Force a page reload to ensure fresh data is loaded
       setTimeout(() => {
-        navigate("/subscription");
+        // Add a timestamp parameter to force fresh load
+        const timestamp = Date.now();
+        window.location.href = `/subscription?refresh=${timestamp}`;
       }, 2000);
     } catch (error) {
       console.error("Cancel error:", error);
