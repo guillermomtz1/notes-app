@@ -44,7 +44,7 @@ const SubscriptionCancel = () => {
         try {
           // Multiple refresh attempts to ensure we get fresh data
           await window.Clerk.user.reload();
-          
+
           // Try to refresh the entire Clerk session
           if (window.Clerk.load) {
             await window.Clerk.load();

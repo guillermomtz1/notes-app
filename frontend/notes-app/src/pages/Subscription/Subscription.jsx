@@ -71,7 +71,6 @@ const Subscription = () => {
     }
   }, [isSignedIn, getToken]);
 
-
   // Load notes on component mount
   useEffect(() => {
     fetchNotes();
@@ -106,7 +105,10 @@ const Subscription = () => {
         try {
           await window.Clerk.user.reload();
         } catch (error) {
-          console.error("Error auto-refreshing user data on visibility change:", error);
+          console.error(
+            "Error auto-refreshing user data on visibility change:",
+            error
+          );
         }
       }
     };
@@ -123,7 +125,10 @@ const Subscription = () => {
         try {
           await window.Clerk.user.reload();
         } catch (error) {
-          console.error("Error auto-refreshing user data on window focus:", error);
+          console.error(
+            "Error auto-refreshing user data on window focus:",
+            error
+          );
         }
       }
     };
