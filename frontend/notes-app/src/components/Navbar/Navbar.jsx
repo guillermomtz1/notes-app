@@ -58,18 +58,7 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "w-8 h-8",
-                    userButtonPopoverCard:
-                      "bg-surface border border-border shadow-lg",
-                    userButtonPopoverActionButton:
-                      "text-text hover:bg-surface-light",
-                    userButtonPopoverFooter: "hidden",
-                  },
-                }}
-              />
+              <UserButton />
             </SignedIn>
           </div>
         </div>

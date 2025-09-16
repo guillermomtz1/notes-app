@@ -11,6 +11,7 @@ import {
   FaHeart,
 } from "react-icons/fa";
 import braggyLogo from "../../assets/braggy-logo.png";
+import landingScreenshot from "../../assets/Landingpage-example.png";
 import { PricingSection } from "../../components/Pricing";
 
 const Landing = () => {
@@ -82,6 +83,42 @@ const Landing = () => {
           </div>
         </div>
       </div>
+
+      {/* Showcase Section */}
+      <section className="py-14 md:py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-text mb-3">
+              ✨ See your wins at a glance
+            </h2>
+            <p className="text-text-light text-lg md:text-xl">
+              Clean, organized cards that make your impact easy to share 📣
+            </p>
+          </div>
+
+          <div className="relative">
+            <div className="absolute -inset-2 md:-inset-3 rounded-3xl green-accent-border blur-md opacity-20 pointer-events-none" />
+            <figure
+              className="bg-surface border border-border rounded-2xl overflow-hidden"
+              style={{
+                boxShadow:
+                  "0 28px 80px rgba(17, 24, 39, 0.22), 0 12px 24px rgba(17, 24, 39, 0.10)",
+              }}
+            >
+              <img
+                src={landingScreenshot}
+                alt="Braggy example of note cards"
+                className="w-full h-auto object-cover drop-shadow-2xl"
+                loading="lazy"
+              />
+              <figcaption className="px-4 md:px-6 py-4 border-t border-border bg-surface-light/60 text-center text-text-light">
+                Real examples of how your notes are presented — readable,
+                beautiful, and review‑ready 🚀
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
 
       {/* Features Section */}
       <div className="py-20">

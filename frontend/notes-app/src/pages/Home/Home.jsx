@@ -188,7 +188,11 @@ const Home = () => {
               <NoteCard
                 key={note._id}
                 title={note.title}
-                date={new Date(note.date).toLocaleDateString()}
+                date={new Date(note.date).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
                 content={note.content}
                 tags={note.tags.join(", ")}
                 onClick={() => {

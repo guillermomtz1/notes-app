@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import TagInput from "../../components/Input/TagInput";
-import { MdClose, MdFormatListBulleted, MdCalendarToday } from "react-icons/md";
+import { MdClose, MdCalendarToday } from "react-icons/md";
 
 const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
   const [title, setTitle] = useState(noteData?.title || "");
@@ -151,13 +151,6 @@ const AddEditNotes = ({ type, noteData, onClose, onSubmit }) => {
           <label className="text-sm font-medium text-text-light uppercase tracking-wide">
             CONTENT
           </label>
-          <button
-            onClick={insertBullet}
-            className="p-2 text-text-muted hover:text-primary hover:bg-surface-light rounded transition-colors"
-            title="Add bullet point (Ctrl+L)"
-          >
-            <MdFormatListBulleted className="text-lg" />
-          </button>
         </div>
         <textarea
           ref={textareaRef}
