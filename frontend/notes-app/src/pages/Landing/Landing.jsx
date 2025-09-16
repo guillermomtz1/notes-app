@@ -12,7 +12,6 @@ import {
 } from "react-icons/fa";
 import braggyLogo from "../../assets/braggy-logo.png";
 import { PricingSection } from "../../components/Pricing";
-import SubscriptionPricing from "../../components/Pricing/SubscriptionPricing";
 
 const Landing = () => {
   const { openSignUp } = useClerk();
@@ -149,7 +148,7 @@ const Landing = () => {
       </div>
 
       {/* Pricing Section */}
-      <SubscriptionPricing />
+      <PricingSection />
 
       {/* CTA Section */}
       <div className="py-20">

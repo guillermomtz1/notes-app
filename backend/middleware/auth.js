@@ -14,6 +14,7 @@ const authenticateUser = async (req, res, next) => {
     const payload = await verifyToken(token, {
       secretKey: process.env.CLERK_SECRET_KEY,
     });
+
     if (!payload || !payload.sub) {
       console.error("Auth error: Missing 'sub' in token payload", payload);
       return sendUnauthorizedError(res, MESSAGES.INVALID_TOKEN_PAYLOAD);

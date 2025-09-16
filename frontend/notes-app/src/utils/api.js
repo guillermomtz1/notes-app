@@ -13,11 +13,6 @@ if (import.meta.env.DEV) {
 export const API_ENDPOINTS = {
   NOTES: `${API_BASE_URL}/api/notes`,
   NOTE_BY_ID: (id) => `${API_BASE_URL}/api/notes/${id}`,
-  ADMIN: {
-    CANCEL_SUBSCRIPTION: `${API_BASE_URL}/api/admin/cancel-subscription`,
-    CHECK_SUBSCRIPTION: `${API_BASE_URL}/api/admin/check-subscription`,
-    UPDATE_SUBSCRIPTION: `${API_BASE_URL}/api/admin/update-subscription`,
-  },
 };
 
 export const apiRequest = async (endpoint, options = {}) => {

@@ -1,6 +1,5 @@
 const express = require("express");
 const { authenticateUser } = require("../middleware/auth");
-const { checkNoteLimit } = require("../middleware/subscription");
 const {
   validateNoteCreation,
   validateNoteUpdate,
@@ -15,7 +14,6 @@ const router = express.Router();
 router.post(
   "/",
   authenticateUser,
-  checkNoteLimit,
   validateNoteCreation,
   asyncHandler(async (req, res) => {
     const { title, content, date, tags } = req.body;
