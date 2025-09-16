@@ -18,7 +18,13 @@ const Landing = () => {
   const { openSignUp } = useClerk();
 
   const handleSignUp = () => {
-    openSignUp();
+    console.log("handleSignUp called");
+    console.log("openSignUp function:", openSignUp);
+    try {
+      openSignUp();
+    } catch (error) {
+      console.error("Error in handleSignUp:", error);
+    }
   };
 
   return (
@@ -67,11 +73,18 @@ const Landing = () => {
               <em>you go</em>, without the fluff.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <SignUpButton mode="modal">
-                <button className="btn-primary px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white cursor-pointer">
-                  Start Writing Today
-                </button>
-              </SignUpButton>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log("Button clicked!");
+                  handleSignUp();
+                }}
+                className="bg-primary text-white px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 cursor-pointer hover:bg-primary-dark"
+                style={{ pointerEvents: "auto" }}
+              >
+                Start Writing Today - UPDATED
+              </button>
               <Link
                 to="/login"
                 className="btn-secondary px-8 py-4 text-lg font-semibold whitespace-nowrap text-center hover:text-white"
