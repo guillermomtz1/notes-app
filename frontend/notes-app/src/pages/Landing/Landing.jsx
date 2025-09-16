@@ -38,7 +38,7 @@ const Landing = () => {
             <div className="flex items-center space-x-4">
               <Link
                 to="/login"
-                className="text-text-light hover:text-primary transition-colors"
+                className="px-4 py-2 text-sm font-medium rounded-lg border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-white transition-all duration-200"
               >
                 Login
               </Link>
@@ -67,12 +67,12 @@ const Landing = () => {
               <em>you go</em>, without the fluff.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/signup"
-                className="gradient-bg px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white cursor-pointer inline-block"
+              <button
+                onClick={handleSignUp}
+                className="gradient-bg px-8 py-4 text-lg font-semibold transform hover:scale-105 whitespace-nowrap text-center rounded-lg transition-all duration-200 text-white cursor-pointer"
               >
                 Start Writing Today
-              </Link>
+              </button>
               <Link
                 to="/login"
                 className="btn-secondary px-8 py-4 text-lg font-semibold whitespace-nowrap text-center hover:text-white"

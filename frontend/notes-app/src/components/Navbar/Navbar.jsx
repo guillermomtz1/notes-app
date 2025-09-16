@@ -51,18 +51,11 @@ const Navbar = ({ searchQuery, onSearchChange }) => {
           {/* Authentication */}
           <div className="flex items-center space-x-4">
             <SignedOut>
-              <Link
-                to="/login"
-                className="px-4 py-2 text-sm font-medium rounded-lg border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-white transition-all duration-200"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/signup"
-                className="btn-primary px-4 py-2 rounded-lg text-sm font-medium"
-              >
-                Sign Up
-              </Link>
+              <SignInButton mode="modal">
+                <button className="btn-primary px-4 py-2 rounded-lg text-sm font-medium">
+                  Sign In
+                </button>
+              </SignInButton>
             </SignedOut>
             <SignedIn>
               <UserButton />
