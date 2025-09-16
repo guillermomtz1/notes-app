@@ -45,6 +45,10 @@ const SubscriptionCancel = () => {
         try {
           await window.Clerk.user.reload();
           console.log("✅ Clerk user data refreshed after cancellation");
+          
+          // Debug: Log the updated user data
+          console.log("🔍 Updated user data:", window.Clerk.user);
+          console.log("🔍 Updated publicMetadata:", window.Clerk.user.publicMetadata);
         } catch (error) {
           console.error("❌ Error refreshing user data:", error);
         }

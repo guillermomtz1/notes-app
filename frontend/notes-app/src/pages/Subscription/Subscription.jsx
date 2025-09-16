@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
-import { FaCrown, FaCheck, FaArrowLeft } from "react-icons/fa";
+import { FaCrown, FaCheck, FaArrowLeft, FaBug } from "react-icons/fa";
 import SubscriptionUpgrade from "../../components/Subscription/SubscriptionUpgrade";
 import SubscriptionCancel from "../../components/Subscription/SubscriptionCancel";
 import { API_ENDPOINTS, apiRequest } from "../../utils/api";
@@ -11,6 +11,7 @@ const Subscription = () => {
   const { user } = useUser();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [debugInfo, setDebugInfo] = useState(null);
 
   // Check subscription status (check both fields like backend)
   const hasPremiumFromMetadata = (() => {
@@ -70,6 +71,30 @@ const Subscription = () => {
       setLoading(false);
     }
   }, [isSignedIn, getToken]);
+
+  // Debug function to test API endpoint
+  const testSubscriptionAPI = async () => {
+    try {
+      const token = await getToken();
+      const response = await fetch(API_ENDPOINTS.ADMIN.CHECK_SUBSCRIPTION, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setDebugInfo(data);
+        console.log("🔍 API Response:", data);
+      } else {
+        console.error("❌ API Error:", response.status, response.statusText);
+        setDebugInfo({ error: `API Error: ${response.status} ${response.statusText}` });
+      }
+    } catch (error) {
+      console.error("❌ API Request Failed:", error);
+      setDebugInfo({ error: `Request Failed: ${error.message}` });
+    }
+  };
 
   // Load notes on component mount
   useEffect(() => {
@@ -220,6 +245,43 @@ const Subscription = () => {
             {/* Subscription Cancellation */}
             <div className="card">
               <SubscriptionCancel />
+            </div>
+
+            {/* Debug Section */}
+            <div className="card bg-yellow-50 border-yellow-200">
+              <h3 className="text-lg font-semibold text-yellow-800 mb-4 flex items-center">
+                <FaBug className="mr-2" />
+                Debug Tools
+              </h3>
+              <div className="space-y-3">
+                <button
+                  onClick={testSubscriptionAPI}
+                  className="btn-secondary text-sm"
+                >
+                  Test Subscription API
+                </button>
+                <button
+                  onClick={() => {
+                    console.log("🔍 Current user:", user);
+                    console.log("🔍 Public metadata:", user?.publicMetadata);
+                    console.log("🔍 Has premium from metadata:", hasPremiumFromMetadata);
+                    console.log("🔍 Has premium from PLA:", hasPremiumFromPla);
+                    console.log("🔍 Is canceled:", isCanceled);
+                    console.log("🔍 End date:", subscriptionEndDate);
+                  }}
+                  className="btn-secondary text-sm"
+                >
+                  Log User Data to Console
+                </button>
+                {debugInfo && (
+                  <div className="mt-4 p-3 bg-white rounded border">
+                    <h4 className="font-semibold text-sm mb-2">API Response:</h4>
+                    <pre className="text-xs overflow-auto">
+                      {JSON.stringify(debugInfo, null, 2)}
+                    </pre>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ) : (
