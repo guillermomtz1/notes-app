@@ -145,7 +145,7 @@ const Landing = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="card hover-purple-light transition-all duration-300 hover:glow-effect">
+            <div className="card transition-all duration-300 hover:scale-105 cursor-pointer">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">📝</span>
               </div>
@@ -157,7 +157,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className="card hover-purple-light transition-all duration-300 hover:glow-effect">
+            <div className="card transition-all duration-300 hover:scale-105 cursor-pointer">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🧠</span>
               </div>
@@ -169,7 +169,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className="card hover-purple-light transition-all duration-300 hover:glow-effect">
+            <div className="card transition-all duration-300 hover:scale-105 cursor-pointer">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🔒</span>
               </div>
@@ -181,7 +181,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className="card hover-purple-light transition-all duration-300 hover:glow-effect">
+            <div className="card transition-all duration-300 hover:scale-105 cursor-pointer">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🔄</span>
               </div>
@@ -211,7 +211,7 @@ const Landing = () => {
             </p>
             <button
               onClick={handleSignUp}
-              className="bg-white text-primary border-2 border-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105 inline-block hover:bg-primary hover:text-white"
+              className="bg-white text-primary border-2 border-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 transform hover:scale-105 inline-block hover:bg-primary hover:text-white cursor-pointer"
             >
               Create Your Free Account
             </button>
