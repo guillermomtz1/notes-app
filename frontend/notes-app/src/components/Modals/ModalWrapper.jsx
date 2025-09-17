@@ -6,7 +6,6 @@ const ModalWrapper = ({
   onRequestClose,
   children,
   className = "",
-  overlayClassName = "",
   contentLabel = "",
   ...props
 }) => {

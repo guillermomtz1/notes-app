@@ -197,7 +197,7 @@ const Landing = () => {
       </div>
 
       {/* Pricing Section */}
-      <PricingSection />
+      {/* <PricingSection /> */}
 
       {/* CTA Section */}
       <div className="py-20">
